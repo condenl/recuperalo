@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "255080032478",
+    "firebase_url": "https://recuperalo-7a82b.firebaseio.com",
+    "project_id": "recuperalo-7a82b",
+    "storage_bucket": "recuperalo-7a82b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255080032478:android:2b189b4e1f86a2fc",
+        "android_client_info": {
+          "package_name": "org.inspt.recuperalo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255080032478-nm7i4b09t003ksad3qo4l1jj0ro2u66q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGxmDiuQH0AcUpfFlwnwb2nm8DEt3JO0Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
