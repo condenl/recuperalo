@@ -10,3 +10,38 @@ of writing your own CSS rules. For a full list of class names in the theme
 refer to http://docs.nativescript.org/ui/theme.
 */
 @import '~nativescript-theme-core/css/core.light.css';
+
+.fa {
+    font-family: "FontAwesome";
+}
+
+.page {
+    background-color: #FFF;
+    color: #000;
+    flex-direction: column;
+    align-items: center;
+}
+
+.m-t-25-percent {
+    margin-top: 25%;
+}
+
+.w-95 {
+    width: 95%;
+}
+
+.action-bar {
+    color: #000;
+    padding-right: 10;
+}
+
+.action-button{
+    font-size: 20;
+}
+
+.hr {
+    background-color: #000;
+    width: 95%;
+    margin-top: 21;
+    height: 1;
+}

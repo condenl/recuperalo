@@ -1,0 +1,39 @@
+<ActionBar class="action-bar" title="Your Profile">
+    <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" (tap)="routeUtils.routeTo('home', 'slideBottom')"></NavigationButton>
+    <ActionItem android.position="actionBar" ios.position="right" (tap)="routeUtils.routeTo('home', 'slideBottom')">
+        <Label text="&#xf044;" class="fa action-button"></Label>
+    </ActionItem>
+</ActionBar>
+<FlexboxLayout class="page m-t-30">
+    <StackLayout class="profile-container">
+        <GridLayout columns="*, *" rows="auto, auto, auto">
+            <StackLayout rowSpan="2">
+                <Image *ngIf="profileImageUrl" #profileImage class="profile-picture" src="{{profileImageUrl}}" 
+                    (loaded)="onImageLoaded($event)" stretch="aspectFill"></Image>
+            </StackLayout>
+            <GridLayout *ngIf="imageLoading" rowSpan="2" columns="*" rows="*" class="image-loading">
+                <ActivityIndicator verticalAlignment="middle" color="white" busy="true"></ActivityIndicator>
+            </GridLayout>
+            <StackLayout col="0" row="2">
+                <Button class="btn btn-outline" text="Upload Image" (tap)="choosePicture()"></Button>
+            </StackLayout>
+            <StackLayout col="1" row="0" class="input-field">
+                <Label text="Username" class="label font-weight-bold m-b-5"></Label>
+                <Label class="input" text="conde123"></Label>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+            <StackLayout col="1" row="1" class="input-field">
+                <Label text="Name" class="label font-weight-bold m-b-5"></Label>
+                <Label class="input" text="Nicolas Conde"></Label>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+            <StackLayout col="1" row="2" class="input-field">
+                <Label text="Birthday" class="label font-weight-bold m-b-5"></Label>
+                <Label class="input" text="29/04/1997"></Label>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+        </GridLayout>
+        <StackLayout class="hr"></StackLayout>
+    </StackLayout>
+    <Label text="Log Out" class="logout-button text-center m-b-20" (tap)="logOut()"></Label>
+</FlexboxLayout>

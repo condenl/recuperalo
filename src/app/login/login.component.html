@@ -1,0 +1,16 @@
+<FlexboxLayout class="page page-login" backgroundImage="res://mesh">
+    <StackLayout class="w-95 company-logo-container">
+        <Label class="t-30 m-t-25-percent text-center text-uppercase" text="recuperalo"></Label>
+        <Image src="res://company_logo" width="30%"></Image>
+    </StackLayout>
+    
+    <StackLayout class="w-95">
+        <StackLayout class="btn btn-rounded-sm btn-login-facebook" orientation="horizontal" (tap)="login(loginType.FACEBOOK)">
+            <Image src="res://icon_facebook" width="7%" marginRight="10"></Image>
+            <Label class="text-center text-uppercase" width="83%" 
+                verticalAlignment="center" text="Log-in with Facebook"></Label>
+        </StackLayout>
+        <Button class="btn btn-rounded-sm btn-login-pnumber text-center" 
+            text="Log-in by device" (tap)="login(loginType.PHONE)"></Button>
+    </StackLayout>
+</FlexboxLayout>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { LoginService } from "~/app/shared/login.service";
 
 const firebase = require("nativescript-plugin-firebase");
 
@@ -9,13 +10,21 @@ const firebase = require("nativescript-plugin-firebase");
 })
 export class AppComponent implements OnInit {
     
+    constructor(private loginService: LoginService) { }
+
     ngOnInit(): void {
         firebase.init({
-            // Optionally pass in properties for database, authentication and cloud messaging,
-            // see their respective docs.
+            onAuthStateChanged: data => this.loginService.setCurrentUid(data.loggedIn ? data.user.uid : "")
         }).then(
             instance => console.log("firebase.init done"),
-            error => console.log(`firebase.init error: ${error}`)
+            error => {
+                console.log(`firebase.init error: ${error}`);
+                if (error.includes("Firebase already initialized")) {
+                    firebase.getCurrentUser()
+                        .then(user => this.loginService.setCurrentUid(user.uid))
+                        .catch(error => this.loginService.setCurrentUid(""));
+                }
+            }
         );
     }
 

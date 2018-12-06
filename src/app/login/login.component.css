@@ -1,0 +1,38 @@
+.page-login-container {
+  background-color: #3C59FD;
+  android-status-bar-background: #3C59FD;
+}
+
+.page-login {
+  background-color: #3C59FD;
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: contain;
+  color: #ffffff;
+}
+
+.company-logo-container {
+  flex-grow: 1;
+}
+
+.btn-login-facebook {
+  color: #FFF;
+  text-shadow: 0 -1 0 #354C8C;
+  padding: 0 47 0 25;
+  border-color: #2b3c6a;
+  background-color: #4C69BA;
+  background-image: linear-gradient(#4C69BA, #3B55A0);
+}
+
+.btn-login-facebook:highlighted {
+  background-color: #5B7BD5;
+}
+
+.btn-login-pnumber {
+  color: #000;
+  background-color: #FFF;
+}
+
+.btn-login-pnumber:highlighted {
+  background-color: #EAEAEA;
+}
