@@ -21,3 +21,20 @@
     height: 130;
     margin: 5 0;
 }
+
+.border-right {
+    border-color: white;
+    border-right-width: 1;
+}
+
+.title {
+    font-size: 17;
+}
+
+.sub-title {
+    font-size: 16;
+}
+
+.input {
+    font-size: 15;
+}

@@ -29,18 +29,10 @@ export class ImageService {
         return path;
     }
 
-    public remoteUrl(path: string, successCb?: any, errorCb?: any, finallyCb?: any): Promise<any> {
+    public remoteUrl(path: string): Promise<any> {
         return firebase.storage.getDownloadUrl({
             remoteFullPath: path
-        }).then(
-            successCb,
-            error => {
-                console.log("Error fetching url from firebase storage: " + error);
-                if (errorCb) {
-                    return errorCb();
-                }
-            }
-        ).finally(finallyCb);
+        });
     }
 
     public uploadImage(imageAsset: any, remotePath: string): Promise<string> {

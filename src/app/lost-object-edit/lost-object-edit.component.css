@@ -1,0 +1,20 @@
+.lost-object-picture {
+    width: 130;
+    height: 130;
+    margin: 5 0;
+}
+
+.normal-font-size {
+    font-size: 15;
+}
+
+
+.description-border-color {
+    border-color: #DEDEDE;
+}
+
+.delete-button {
+    color: white;
+    background-color: red;
+    font-weight: bold;
+}

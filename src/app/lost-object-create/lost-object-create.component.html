@@ -1,0 +1,16 @@
+<FlexboxLayout [formGroup]="lostObjectCreateForm" class="page gray-bg color-white p-t-10">
+    <StackLayout class="flex-grow-1">
+        <Image *ngIf="lostObjectImageUrl" class="lost-object-picture" src="{{ lostObjectImageUrl }}"  stretch="aspectFill"></Image>
+        <Button class="btn btn-outline normal-font-size" text="Upload Image" width="40%" (tap)="choosePicture()"></Button>
+        <TextField hint="lost object name" 
+            class="input text-center normal-font-size {{ !name.valid ? 'input-error-outline' : '' }}" 
+            maxLength="15" width="50%" formControlName="name"></TextField>
+        <TextView  hint="lost object description" 
+            borderWidth="1" height="80" width="80%" returnKeyType="send" 
+            class="input input-border m-t-15 m-b-15 normal-font-size {{ !description.valid ? 'input-error-outline' : '' }}" 
+            formControlName="description"></TextView>
+        <MapView width="90%" (mapReady)="onMapReady($event)"></MapView>
+    </StackLayout>
+    <Button class="btn btn-primary m-b-10" text="Create" 
+        [disabled]="!lostObjectCreateForm.valid" (tap)="createLostObject()"></Button>
+</FlexboxLayout>

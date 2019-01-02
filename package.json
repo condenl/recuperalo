@@ -1,10 +1,10 @@
 {
   "nativescript": {
     "id": "org.inspt.recuperalo",
-    "tns-android": {
+    "tns-ios": {
       "version": "5.0.0"
     },
-    "tns-ios": {
+    "tns-android": {
       "version": "5.0.0"
     }
   },
@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
     "nativescript-angular": "~7.0.0",
+    "nativescript-google-maps-sdk": "^2.6.1",
     "nativescript-imagepicker": "^6.0.5",
     "nativescript-loading-indicator": "^2.4.0",
     "nativescript-plugin-firebase": "^7.4.2",

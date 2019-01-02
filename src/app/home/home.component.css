@@ -1,1 +1,11 @@
-/* Add mobile styles for the component here.  */
+.activity-indicator {
+    color: white;
+    width: 50;
+    height: 50;
+}
+
+.overlay-ro-area {
+    background-color: rgba(0, 0 , 0, .5);
+    height: 100%;
+    width: 100%;
+}

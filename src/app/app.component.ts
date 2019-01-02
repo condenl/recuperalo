@@ -14,17 +14,13 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         firebase.init({
-            onAuthStateChanged: data => this.loginService.setCurrentUid(data.loggedIn ? data.user.uid : "")
+            onAuthStateChanged: data => {
+                console.log("authStateChanged: ", JSON.stringify(data));
+                this.loginService.setCurrentUid(data.loggedIn ? data.user.uid : "");
+            }
         }).then(
             instance => console.log("firebase.init done"),
-            error => {
-                console.log(`firebase.init error: ${error}`);
-                if (error.includes("Firebase already initialized")) {
-                    firebase.getCurrentUser()
-                        .then(user => this.loginService.setCurrentUid(user.uid))
-                        .catch(error => this.loginService.setCurrentUid(""));
-                }
-            }
+            error => console.log(`firebase.init error: ${error}`)
         );
     }
 

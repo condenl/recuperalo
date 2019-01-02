@@ -12,13 +12,17 @@ export class BypassLoginGuard implements CanActivate {
     constructor(private loginService: LoginService, private routeUtils: RouteUtilsService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> | Promise<boolean> {
-        //TODO review how it works on real devices
         console.log("evaluating bypass-login-guard");
-        if (this.loginService.getCurrentUid()) {
-            this.routeUtils.routeTo("home", "slideTop");
-            return false;
-        }
-        return true;
+        
+        return this.loginService.getCurrentUser()
+            .then(user => {
+                this.loginService.setCurrentUid(user.uid);
+                this.routeUtils.routeTo("home", "slideTop");
+                return false;
+            }).catch(error => {
+                console.log(`bypass-login-guard error: ${error}`);
+                return true;
+            });
     }
     
 }

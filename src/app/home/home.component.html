@@ -3,4 +3,14 @@
         <Label text="&#xf2bd;" class="fa action-button"></Label>
     </ActionItem>
 </ActionBar>
-<Button text="home works!" class="btn btn-primary"></Button>
+<StackLayout>
+    <SegmentedBar [items]="segmentedBarItems" (selectedIndexChange)="onSelectedIndexChange($event)" 
+            ios:selectedBackgroundColor="white" android:selectedBackgroundColor="#FAC950" 
+            class="conf-segmented-bar gray-bg"></SegmentedBar>
+    <GridLayout>
+        <router-outlet></router-outlet>
+        <GridLayout *ngIf="tabNavigation" class="overlay-ro-area">
+            <ActivityIndicator busy="true" class="activity-indicator"></ActivityIndicator>
+        </GridLayout>
+    </GridLayout>
+</StackLayout>

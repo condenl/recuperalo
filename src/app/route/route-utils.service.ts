@@ -10,7 +10,7 @@ export class RouteUtilsService {
 
     }
 
-    public routeTo(url: string, transition: string, fragment?: string): void {
+    public routeTo(url: string, transition?: string, fragment?: string): void {
         this.routerExtensions.navigate([url], {
             clearHistory: true,
             animated: true,
