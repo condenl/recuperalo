@@ -6,6 +6,7 @@ import { RouteUtilsService } from "~/app/route/route-utils.service";
 import { AppUserService } from "~/app/shared/app-user.service";
 import { HomeActivityIndicatorService } from "~/app/shared/home-activity-indicator.service";
 import { LoaderUtilsService } from "~/app/shared/loader-utils.service";
+import { localize } from "nativescript-localize";
 
 var dialogs = require("tns-core-modules/ui/dialogs");
 
@@ -27,9 +28,9 @@ export class UsernameSetGuard implements CanActivate {
                     return true;
                 } else {
                     dialogs.alert({
-                        title: "Alert",
-                        message: "You should have a username",
-                        okButtonText: "Continue"
+                        title: localize("com.recuperalo.mobile.alert"),
+                        message: localize("com.recuperalo.mobile.required.username"),
+                        okButtonText: localize("com.recuperalo.mobile.continue")
                     }).then(() => {
                         this.loaderUtils.show();
                         this.homeActivityIndicatorService.notBusy();

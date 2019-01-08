@@ -11,7 +11,7 @@ export class LostObjectResolver implements Resolve<Promise<any>> {
     constructor(private lostObjectService: LostObjectService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
-        console.log("executing LostObjectResolver");
+        console.log("resolving lost object");
         return this.lostObjectService.findByFirebaseKey(route.params['firebaseKey']);
     }
 

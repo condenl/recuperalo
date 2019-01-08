@@ -28,11 +28,11 @@ export class LostObjectCreateComponent implements OnInit {
 
     private lostObjectCreateForm: FormGroup;
 
-    private publishTimestamp: number;
-
     private mapView: MapView;
 
     private appUser: AppUser;
+
+    private publishTimestamp: number;
 
     constructor(private lostObjectService: LostObjectService, 
         private loaderUtils: LoaderUtilsService,
@@ -45,9 +45,9 @@ export class LostObjectCreateComponent implements OnInit {
     ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: { emptyImageUrl: string; 
+            .subscribe((data: { noPhotoUrl: string; 
                     appUser: AppUser }) => {
-                this.lostObjectImageUrl = data.emptyImageUrl;
+                this.lostObjectImageUrl = data.noPhotoUrl;
                 this.appUser = data.appUser[Object.keys(data.appUser)[0]];
             });
 
@@ -77,14 +77,9 @@ export class LostObjectCreateComponent implements OnInit {
         this.mapView = event.object;
     };
 
-    //TODO review life-cycle
     public createLostObject() {
-        console.log("ok 1");
         this.lostObjectService.create(this.populateLostObject())
             .then(() => {
-                console.log("ok 2");
-                this.publishTimestamp = new Date().getTime();
-                this.lostObjectCreateForm.reset();
                 this.routeUtils.routeTo("/home/found");
             });
     }

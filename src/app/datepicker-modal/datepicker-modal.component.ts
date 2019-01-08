@@ -18,7 +18,7 @@ export class DatePickerModalComponent implements OnInit {
     private datePickerElement: ElementRef;
 
     constructor(private params: ModalDialogParams) {
-        console.dir(params.context);
+        console.log("DatePickerModalComponent constructor: ", params.context);
         this.currentDate = new Date(params.context);
     }
 

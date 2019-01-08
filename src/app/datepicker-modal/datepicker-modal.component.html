@@ -1,7 +1,7 @@
 <StackLayout>
     <DatePicker #datepicker></DatePicker>
     <StackLayout orientation="horizontal">
-        <Button class="btn btn-outline" text="Cancel" (tap)="cancel()"></Button>
-        <Button class="btn btn-primary btn-active" text="Submit" (tap)="submit()"></Button>
+        <Button class="btn btn-outline" text="{{ 'com.recuperalo.mobile.cancel' | L }}" (tap)="cancel()"></Button>
+        <Button class="btn btn-primary btn-active" text="{{ 'com.recuperalo.mobile.submit' | L }}" (tap)="submit()"></Button>
     </StackLayout>
 </StackLayout>

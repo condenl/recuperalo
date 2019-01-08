@@ -1,5 +1,6 @@
 <ActionBar class="action-bar" title="Object View">
-    <NavigationButton text="Go Back" android.systemIcon="ic_menu_back" (tap)="routeUtils.routeTo('home', 'slideBottom')"></NavigationButton>
+    <NavigationButton text="{{ 'com.recuperalo.mobile.go-back' | L }}" 
+    android.systemIcon="ic_menu_back" (tap)="routeUtils.routeTo('home', 'slideBottom')"></NavigationButton>
 </ActionBar>
 
 <FlexboxLayout class="page gray-bg color-white p-t-10">
@@ -10,7 +11,8 @@
         <TextView [text]="lostObject.description" editable="false"
             borderWidth="1" height="80" width="80%" returnKeyType="send" 
             class="input input-border m-t-15 m-b-15 normal-font-size"></TextView>
-        <MapView width="90%" latitude="{{ lostObject.location[0] }}" longitude="{{ lostObject.location[1] }}" (mapReady)="onMapReady($event)"></MapView>
+        <MapView width="90%" latitude="{{ lostObject.location[0] }}" 
+            longitude="{{ lostObject.location[1] }}" (mapReady)="onMapReady($event)"></MapView>
     </StackLayout>
     <Button class="btn btn-primary m-b-10 green-bg" text="Contact" (tap)="contact()"></Button>
 </FlexboxLayout>

@@ -25,7 +25,7 @@ export class LostObjectEditComponent implements OnInit {
 
     private lostObjectImageUrl: string;
 
-    private lostObjectCreateForm: FormGroup;
+    private lostObjectEditForm: FormGroup;
 
     private lostObjectFirebaseKey: string;
 
@@ -55,7 +55,7 @@ export class LostObjectEditComponent implements OnInit {
                 this.lostObject = data.lostObject[this.lostObjectFirebaseKey];
                 console.log(this.lostObject);
                 this.appUser = data.appUser[Object.keys(data.appUser)[0]];
-                this.lostObjectCreateForm = this.formBuilder.group({
+                this.lostObjectEditForm = this.formBuilder.group({
                     name: [this.lostObject.name, Validators.required],
                     description: [this.lostObject.description, Validators.required]
                 });
@@ -82,17 +82,15 @@ export class LostObjectEditComponent implements OnInit {
         this.mapView = event.object;
     };
 
-    public editLostObject(update: boolean) {
-        if (update) {
-            this.lostObjectService.update(this.populateLostObject(), this.lostObjectFirebaseKey)
-                .then(() => {
-                    this.lostObjectCreateForm.reset();
-                    this.routeUtils.routeTo("/home/found");
-                });
-        } else {
-            this.lostObjectCreateForm.reset();
-            this.routeUtils.routeTo("/home/found");
-        }
+    public saveLostObject(update: boolean) {
+        this.lostObjectService.update(this.populateLostObject(), this.lostObjectFirebaseKey)
+            .then(() => {
+                this.routeUtils.routeTo("/home/found");
+            });
+    }
+
+    public cancelEditing() {
+        this.routeUtils.routeTo("/home/found");
     }
 
     private populateLostObject(): LostObject {
@@ -113,11 +111,11 @@ export class LostObjectEditComponent implements OnInit {
     }
 
     get name() {
-        return this.lostObjectCreateForm.get("name");
+        return this.lostObjectEditForm.get("name");
     }
     
     get description() {
-        return this.lostObjectCreateForm.get("description");
+        return this.lostObjectEditForm.get("description");
     }
 
 }

@@ -6,6 +6,7 @@ import { LoginService } from "~/app/shared/login.service";
 import { LoginType } from "~/app/shared/login-type.enum";
 import { ActivatedRoute } from "@angular/router";
 import { RouteFragment } from "~/app/route/route-fragment.enum";
+import { localize } from "nativescript-localize";
 
 var Toast = require("nativescript-toast");
 
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit {
         let _fragment: string;
         this.route.fragment.subscribe(fragment => _fragment = fragment);
         if (_fragment == RouteFragment[RouteFragment.LOGOUT]) {
-            Toast.makeText("Successfully logged out", "long").show();
+            Toast.makeText(localize("com.recuperalo.mobile.login.successful-logout"), "long").show();
         }
     }
 

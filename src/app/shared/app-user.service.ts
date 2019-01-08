@@ -14,8 +14,8 @@ export class AppUserService {
 
     public findById(uid: string): Promise<{ [key: string]: AppUser; }> {
         return firebase.query(function(result) {
-                if (!result.error)
-                    console.log("Key: " + result.key);
+                if (result.error)
+                    console.log("Error retrieving app-user by key: " + result.key);
             },
             "/appUser",
             {
@@ -71,19 +71,29 @@ export class AppUserService {
      */
     public getProfileImage(uid: string): Promise<string> {
         return this.imageService.remoteUrl("profile/" + uid + ".png")
-            .catch(error => console.log(error))
-            .then(() => this.findById(uid))
-            .then(result => {
-                let appUser: AppUser = result[Object.keys(result)[0]];
-                console.log("social media image url: ", appUser.profileImageUrl);
-                if (appUser.profileImageUrl != null) {
-                    return appUser.profileImageUrl;
-                }
-                return this.getDefaultProfileImage();
+            .catch(error => {
+                return this.findById(uid).then(
+                    result => {
+                        let url: string = this.getSocialMediaProfileImage(result[Object.keys(result)[0]]);
+                        if (url != null) {
+                            return url;
+                        }
+                        return this.getDefaultProfileImage();
+                    }
+                )
             });
     }
 
+    private getSocialMediaProfileImage(appUser: AppUser): string {
+        let url: string = null;
+        if (appUser.profileImageUrl != null) {
+            url = appUser.profileImageUrl;
+        }
+        return url;
+    }
+
     public getDefaultProfileImage(): Promise<string> {
+        console.log("getting default profile image");
         return this.imageService.remoteUrl("profile/default-profile.png");
     }
 

@@ -28,17 +28,11 @@ export class LostObjectService {
 
     public findAll(): Promise<any> {
         return firebase.getValue("/lostObject")
-            .then(result => {
-                let keys: Array<string> = Object.keys(result.value);
-                let arr: Array<any> = []
-                for (let i = 0; i < keys.length; i++) {
-                    let obj = {};
-                    obj[keys[i]] = result.value[keys[i]];
-                    arr.push(obj);
-                }
-                console.dir(arr);
-                return arr;
-            });
+            .then(results =>
+                of(results)
+                .pipe(map(result => result["value"]))
+                .toPromise()
+            );
     }
 
     /**
@@ -66,11 +60,9 @@ export class LostObjectService {
                 value: uid
             }
         }).then(
-            results => {
-                return of(results)
+            results => of(results)
                 .pipe(map(result => result["value"]))
-                .toPromise();
-            }
+                .toPromise()
         );
     }
 
@@ -85,13 +77,10 @@ export class LostObjectService {
     }
 
     public findByFirebaseKey(key: string): Promise<any> {
-        console.log("fetching by firebase key in lost-object service: ", key);
         return firebase.getValue("/lostObject/" + key)
             .then(result => {
                 let obj = {};
                 obj[result.key] = result.value;
-                console.log("returning from findByFirebaseKey");
-                console.dir(obj);
                 return obj;
             });
     }

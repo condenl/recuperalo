@@ -2,18 +2,18 @@ import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
+import { NativeScriptLocalizeModule } from "nativescript-localize/angular";
 
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
 
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "~/app/login/login.component";
 import { AppRoutingModule } from "~/app/route/app-routing.module";
-import { HomeComponent } from "~/app/home/home.component";
+import { MainComponent } from "~/app/main/main.component";
 import { ProfileComponent } from "~/app/profile/profile.component";
 import { DatePickerModalComponent } from "~/app/datepicker-modal/datepicker-modal.component";
 import { LostObjectCreateComponent } from "~/app/lost-object-create/lost-object-create.component";
 import { LostObjectListComponent } from "~/app/lost-object-list/lost-object-list.component";
-import { LostObjectFoundComponent } from "~/app/lost-object-found/lost-object-found.component";
 import { LostObjectEditComponent } from "~/app/lost-object-edit/lost-object-edit.component";
 import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view.component";
 
@@ -28,17 +28,17 @@ import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view
         NativeScriptModule,
         AppRoutingModule,
         NativeScriptFormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        NativeScriptLocalizeModule
     ],
     declarations: [
         AppComponent,
         LoginComponent,
-        HomeComponent,
+        MainComponent,
         ProfileComponent,
         DatePickerModalComponent,
         LostObjectListComponent,
         LostObjectCreateComponent,
-        LostObjectFoundComponent,
         LostObjectEditComponent,
         LostObjectViewComponent
     ],

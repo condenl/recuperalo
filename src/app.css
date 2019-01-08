@@ -102,7 +102,6 @@ refer to http://docs.nativescript.org/ui/theme.
     margin-top: 35%;
 }
 
-/* Add mobile styles for the component here.  */
 .conf-segmented-bar {
     background-color: #4ac1fa;
     color: white;
@@ -147,27 +146,36 @@ SearchBar {
     margin: 0 26 0 16;
 }
 
-.session-time {
+.lo-item-username {
     font-family: "sans-serif";
-    /*font-weight: 700;*/
 	font-size: 12;
     color: #4ac1fa;
     margin-top: 16;
 }
 
-.session-room {
+.lo-item-date {
     font-family: "sans-serif";
-    /*font-weight: 700;*/
 	font-size: 12;
 	color: white;
     text-transform: uppercase;
     margin: 16 0 0 4;
 }
 
-.session-title {
+.lo-item-name {
     font-family: "sans-serif";
-    /*font-weight: 300;*/
 	font-size: 20;
 	color: #c3c3c3;
     margin-bottom: 16;
+}
+
+.activity-indicator {
+    color: white;
+    width: 50;
+    height: 50;
+}
+
+.overlay-ro-area {
+    background-color: rgba(0, 0 , 0, .5);
+    height: 100%;
+    width: 100%;
 }

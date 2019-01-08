@@ -11,10 +11,9 @@ export class LostObjectImageResolver implements Resolve<Promise<any>> {
     constructor(private lostObjectService: LostObjectService, private loginService: LoginService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<string> {
-        console.log("executing LostObjectFoundResolver");
+        console.log("resolving lost object image");
         return this.lostObjectService.findByFirebaseKey(route.params['firebaseKey'])
             .then(result => {
-                console.log("image name to fetch: "  + this.loginService.getCurrentUid() + "-" + result[Object.keys(result)[0]].publishTimestamp);
                 return this.lostObjectService.getImage(this.loginService.getCurrentUid() + "-" + result[Object.keys(result)[0]].publishTimestamp)
             });
     }

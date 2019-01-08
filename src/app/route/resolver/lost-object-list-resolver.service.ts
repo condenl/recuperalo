@@ -11,7 +11,7 @@ export class LostObjectListResolver implements Resolve<Promise<any>> {
     constructor(private lostObjectService: LostObjectService, private loginService: LoginService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
-        console.log("executing LostObjectFoundResolver");
+        console.log("resolving lost objects");
         return this.lostObjectService.findAll();
     }
 

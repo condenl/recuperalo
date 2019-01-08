@@ -1,7 +1,6 @@
 export class DateUtils {
 
     public static toString(date: Date): string {
-        console.log("DateUtils ", date);
         let month = '' + (date.getMonth() + 1);
         let day = '' + date.getDate();
         let year = date.getFullYear();

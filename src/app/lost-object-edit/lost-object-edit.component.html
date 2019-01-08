@@ -1,22 +1,22 @@
-<ActionBar class="action-bar" title="Object Edit">
+<ActionBar class="action-bar" title="{{ 'com.recuperalo.mobile.lost-object.edit' | L }}">
     <StackLayout orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
-        <Label text="Cancel" class="m-r-10" (tap)="editLostObject(false)"></Label>
-        <Label text="Done" (tap)="editLostObject(true)"></Label>
+        <Label text="{{ 'com.recuperalo.mobile.cancel' | L }}" class="m-r-10" (tap)="cancelEditing()"></Label>
+        <Label text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="saveLostObject()"></Label>
     </StackLayout>
 </ActionBar>
 
-<FlexboxLayout [formGroup]="lostObjectCreateForm" class="page gray-bg color-white p-t-10">
+<FlexboxLayout [formGroup]="lostObjectEditForm" class="page gray-bg color-white p-t-10">
     <StackLayout class="flex-grow-1">
-        <Image *ngIf="lostObjectImageUrl" class="lost-object-picture" src="{{ lostObjectImageUrl }}"  stretch="aspectFill"></Image>
-        <Button class="btn btn-outline normal-font-size" text="Upload Image" width="40%" (tap)="choosePicture()"></Button>
-        <TextField hint="lost object name" 
+        <Image *ngIf="lostObjectImageUrl" class="lost-object-picture" src="{{ lostObjectImageUrl }}" stretch="aspectFill"></Image>
+        <Button class="btn btn-outline normal-font-size" text="{{ 'com.recuperalo.mobile.upload-image' | L }}" width="40%" (tap)="choosePicture()"></Button>
+        <TextField hint="{{ 'com.recuperalo.mobile.lost-object.name' | L }}" 
             class="input text-center normal-font-size {{ !name.valid ? 'input-error-outline' : '' }}" 
             maxLength="15" width="50%" formControlName="name"></TextField>
-        <TextView  hint="lost object description" 
+        <TextView  hint="{{ 'com.recuperalo.mobile.description' | L }}" 
             borderWidth="1" height="80" width="80%" returnKeyType="send" 
             class="input input-border m-t-15 m-b-15 normal-font-size {{ !description.valid ? 'input-error-outline' : '' }}" 
             formControlName="description"></TextView>
         <MapView width="90%" latitude="{{ lostObject.location[0] }}" longitude="{{ lostObject.location[1] }}" (mapReady)="onMapReady($event)"></MapView>
     </StackLayout>
-    <Button class="btn btn-primary m-b-10 delete-button" text="Delete" (tap)="deleteLostObject()"></Button>
+    <Button class="btn btn-primary m-b-10 delete-button" text="{{ 'com.recuperalo.mobile.delete' | L }}" (tap)="deleteLostObject()"></Button>
 </FlexboxLayout>

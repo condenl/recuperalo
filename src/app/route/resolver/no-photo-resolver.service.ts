@@ -8,12 +8,12 @@ import { LostObjectService } from '~/app/shared/lost-object.service';
 @Injectable({
     providedIn: "root"
 })
-export class LostObjectCreateResolver implements Resolve<Promise<string>> {
+export class NoPhotoResolver implements Resolve<Promise<string>> {
 
     constructor(private lostObjectService: LostObjectService) { }
 
     public resolve(): Promise<string> {
-        console.log("resolving empty picture - lost object create view");
+        console.log("resolving no-photo picture");
         return this.lostObjectService.getDefaultLostObjectImage();
     }
 

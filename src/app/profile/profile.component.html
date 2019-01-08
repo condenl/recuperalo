@@ -1,11 +1,11 @@
-<ActionBar class="action-bar" title="Your Profile">
-    <NavigationButton *ngIf="!editMode" text="Go Back" android.systemIcon="ic_menu_back" (tap)="routeUtils.routeTo('home', 'slideBottom')"></NavigationButton>
-    <ActionItem *ngIf="!editMode" android.position="actionBar" ios.position="right" (tap)="editProfile()">
+<ActionBar class="action-bar" title="{{ 'com.recuperalo.mobile.profile.your-profile' | L }}">
+    <NavigationButton *ngIf="!editMode" text="{{ 'com.recuperalo.mobile.go-back' | L }}" android.systemIcon="ic_menu_back" (tap)="routeUtils.routeTo('home', 'slideBottom')"></NavigationButton>
+    <ActionItem *ngIf="!editMode" android.position="actionBar" ios.position="right" (tap)="switchView()">
         <Label text="&#xf044;" class="fa action-button"></Label>
     </ActionItem>
     <StackLayout *ngIf="editMode" orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
-        <Label text="Cancel" class="m-r-10" (tap)="editProfile(false)"></Label>
-        <Label text="Done" (tap)="editProfile(true)"></Label>
+        <Label text="{{'com.recuperalo.mobile.cancel' | L }}" class="m-r-10" (tap)="cancelEditing()"></Label>
+        <Label text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="saveProfile()"></Label>
     </StackLayout>
 </ActionBar>
 
@@ -20,38 +20,39 @@
                 <ActivityIndicator verticalAlignment="middle" color="white" busy="true"></ActivityIndicator>
             </GridLayout>
             <StackLayout col="0" row="2">
-                <Button class="btn btn-outline" text="Upload Image" (tap)="choosePicture()"></Button>
+                <Button class="btn btn-outline" text="{{ 'com.recuperalo.mobile.upload-image' | L }}" (tap)="choosePicture()"></Button>
             </StackLayout>
             <StackLayout col="1" row="0" class="input-field m-l-5 m-r-10">
                 <StackLayout orientation="horizontal" class="font-weight-bold m-b-5">
-                    <Label text="Username" class="label"></Label>
+                    <Label text="{{ 'com.recuperalo.mobile.profile.username' | L }}" class="label"></Label>
                     <Label *ngIf="editMode" text=" *" class="label" color="#E32"></Label>
                 </StackLayout>
                 
-                <Label *ngIf="!editMode" class="input {{editMode ? 'required-input' : ''}}" text="{{ appUser.username }}"></Label>
+                <Label *ngIf="!editMode" class="input {{ editMode ? 'required-input' : '' }}" text="{{ appUser.username }}"></Label>
                 <StackLayout *ngIf="!editMode" class="hr-light"></StackLayout>
 
                 <StackLayout *ngIf="editMode">
                     <TextField class="input" formControlName="username"></TextField>
-                    <Label *ngIf="username.pending" class="input-pending-msg" text="Checking username..."></Label>
-                    <Label *ngIf="username.valid && username.dirty" maxLength="15" class="input-valid-msg" text="Valid username."></Label>
+                    <Label *ngIf="username.pending" class="input-pending-msg" 
+                        text="{{ 'com.recuperalo.mobile.profile.checking-username' | L }}"></Label>
+                    <Label *ngIf="username.valid && username.dirty" maxLength="15" class="input-valid-msg" text="{{ 'com.recuperalo.mobile.profile.valid-username' | L }}"></Label>
                     <StackLayout *ngIf="username.errors">
                         <StackLayout *ngFor="let err of profile_validation_messages.username">
                             <Label *ngIf="username.errors[err.type]" 
-                                class="{{err.cssClass != null ? err.cssClass : 'input-error-msg'}}" 
+                                class="{{ err.cssClass != null ? err.cssClass : 'input-error-msg' }}" 
                                 text="{{ err.message }}" textWrap="true"></Label>
                         </StackLayout>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>
             <StackLayout col="1" row="1" class="input-field m-l-5 m-r-10">
-                <Label text="Name" class="label font-weight-bold m-b-5"></Label>
+                <Label text="{{ 'com.recuperalo.mobile.profile.name' | L }}" class="label font-weight-bold m-b-5"></Label>
                 <Label *ngIf="!editMode" text="{{ appUser.name }}" class="input"></Label>
                 <StackLayout *ngIf="!editMode" class="hr-light"></StackLayout>
                 <TextField *ngIf="editMode" class="input" maxLength="15" formControlName="name"></TextField>
             </StackLayout>
             <StackLayout col="1" row="2" class="input-field m-l-5 m-r-10">
-                <Label text="Birthday" class="label font-weight-bold m-b-5"></Label>
+                <Label text="{{ 'com.recuperalo.mobile.profile.birthday' | L }}" class="label font-weight-bold m-b-5"></Label>
                 <Label text="{{ formattedBirthday }}" class="input" (tap)="selectDateView()"></Label>
                 <DatePicker visibility="collapsed" class="input" formControlName="birthday"></DatePicker>
                 <StackLayout class="{{ editMode ? 'hr-dark' : 'hr-light'}}"></StackLayout>
@@ -59,19 +60,19 @@
         </GridLayout>
         <StackLayout orientation="horizontal" class="w-95 m-5 text-center">
             <StackLayout class="text-center w-50 text-right p-20 border-right title">
-                <Label text="Published" class="font-weight-bold"></Label>
+                <Label text="{{ 'com.recuperalo.mobile.profile.published' | L }}" class="font-weight-bold"></Label>
                 <Label text="0"></Label>
             </StackLayout>
             <StackLayout class="text-center w-50 text-left p-20 title">
-                <Label text="Points" class="font-weight-bold"></Label>
+                <Label text="{{ 'com.recuperalo.mobile.profile.points' | L }}" class="font-weight-bold"></Label>
                 <Label text="0"></Label>
             </StackLayout>
         </StackLayout>
         <StackLayout class="w-95">
             <StackLayout class="hr-light"></StackLayout>
-            <Label text="Contact Information" class="text-center label sub-title font-weight-bold m-t-10"></Label>
+            <Label text="{{ 'com.recuperalo.mobile.profile.contact-information' | L }}" class="text-center label sub-title font-weight-bold m-t-10"></Label>
             <StackLayout orientation="horizontal" class="font-weight-bold m-b-5">
-                <Label text="Email" class="label"></Label>
+                <Label text="{{ 'com.recuperalo.mobile.profile.email' | L }}" class="label"></Label>
                 <Label *ngIf="editMode" text=" *" class="label" color="#E32"></Label>
             </StackLayout>
             <Label *ngIf="!editMode || appUser.email" text="{{ appUser.email }}" class="input"></Label>
@@ -87,7 +88,7 @@
             </StackLayout>
             <StackLayout *ngIf="!editMode" class="hr-light m-b-10"></StackLayout>
             <StackLayout orientation="horizontal" class="font-weight-bold m-b-5">
-                <Label text="Phone" class="label"></Label>
+                <Label text="{{ 'com.recuperalo.mobile.profile.phone' | L }}" class="label"></Label>
                 <Label *ngIf="editMode" text=" *" class="label" color="#E32"></Label>
             </StackLayout>
             <Label *ngIf="!editMode" text="{{ appUser.phone }}" class="input"></Label>
@@ -106,7 +107,6 @@
     </StackLayout>
     <StackLayout>
         <StackLayout class="hr-dark w-95"></StackLayout>
-        <Label text="{{ appUserJson }}" textWrap="true"></Label>
-        <Label text="Log Out" *ngIf="!editMode" class="logout-button text-center m-b-20" (tap)="logOut()"></Label>
+        <Label text="{{ 'com.recuperalo.mobile.profile.logout' | L }}" *ngIf="!editMode" class="logout-button text-center m-b-20" (tap)="logOut()"></Label>
     </StackLayout>
 </FlexboxLayout>

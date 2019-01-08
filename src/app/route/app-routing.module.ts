@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { Routes } from "@angular/router";
 import { LoginComponent } from "~/app/login/login.component";
-import { HomeComponent } from "~/app/home/home.component";
+import { MainComponent } from "~/app/main/main.component";
 import { ProfileComponent } from "~/app/profile/profile.component";
 import { AuthGuard } from "~/app/route/guard/auth-guard.service";
 import { BypassLoginGuard } from "~/app/route/guard/bypass-login-guard.service";
@@ -11,8 +11,7 @@ import { AppUserResolver } from "~/app/route/resolver/app-user-resolver.service"
 import { FirebaseUserResolver } from "~/app/route/resolver/firebase-user-resolver.service";
 import { LostObjectListComponent } from "~/app/lost-object-list/lost-object-list.component";
 import { LostObjectCreateComponent } from "~/app/lost-object-create/lost-object-create.component";
-import { LostObjectCreateResolver } from "~/app/route/resolver/lost-object-create-resolver.service";
-import { LostObjectFoundComponent } from "~/app/lost-object-found/lost-object-found.component";
+import { NoPhotoResolver } from "~/app/route/resolver/no-photo-resolver.service";
 import { LostObjectFoundResolver } from "~/app/route/resolver/lost-object-found-resolver.service";
 import { UsernameSetGuard } from "~/app/route/guard/username-set-guard.service";
 import { LostObjectEditComponent } from "~/app/lost-object-edit/lost-object-edit.component";
@@ -24,13 +23,16 @@ import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
     { path: "login", component: LoginComponent, canActivate: [ BypassLoginGuard ] },
-    { path: "home", component: HomeComponent, canActivate: [ AuthGuard ],
+    { path: "home", component: MainComponent, canActivate: [ AuthGuard ],
       children: [
         {
-            path: 'lost-object-list',
+            path: 'list',
             component: LostObjectListComponent,
             resolve: {
-                lostObjectWrappers: LostObjectListResolver
+                lostObjects: LostObjectListResolver
+            },
+            data: {
+                detailUrl: "lost-object-view/"
             }
         },
         {
@@ -39,14 +41,17 @@ const routes: Routes = [
             canActivate: [UsernameSetGuard],
             resolve: {
                 appUser: AppUserResolver,
-                emptyImageUrl: LostObjectCreateResolver
+                noPhotoUrl: NoPhotoResolver
             }
         },
         {
             path: 'found',
-            component: LostObjectFoundComponent,
+            component: LostObjectListComponent,
             resolve: {
-                lostObjectWrappers: LostObjectFoundResolver
+                lostObjects: LostObjectFoundResolver
+            },
+            data: {
+                detailUrl: "lost-object-edit/"
             }
         }
       ]

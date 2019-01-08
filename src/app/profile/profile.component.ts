@@ -15,6 +15,7 @@ import { DatePicker } from 'tns-core-modules/ui/date-picker/date-picker';
 import { ModalDialogOptions, ModalDialogService } from 'nativescript-angular/modal-dialog';
 import { DatePickerModalComponent } from '~/app/datepicker-modal/datepicker-modal.component';
 import { DateUtils } from '~/app/shared/date-utils';
+import { localize } from "nativescript-localize";
 
 var dialogs = require("tns-core-modules/ui/dialogs");
 var fs = require("tns-core-modules/file-system");
@@ -44,15 +45,15 @@ export class ProfileComponent implements OnInit {
 
   profile_validation_messages = {
     username: [
-      { type: "required", message: "Required field." },
-      { type: "uniqueUsername", message: "User already taken.", cssClass:"input-error-msg-highlighted" }
+      { type: "required", message: localize("com.recuperalo.mobile.required-field") },
+      { type: "uniqueUsername", message: localize("com.recuperalo.mobile.username-in-use"), cssClass:"input-error-msg-highlighted" }
     ],
     email: [
-      { type: "required", message: "Required field." },
-      { type: "email", message: "Wrong format." }
+      { type: "required", message: localize("com.recuperalo.mobile.required-field") },
+      { type: "email", message: localize("com.recuperalo.mobile.wrong-format") }
     ],
     phone: [
-      { type: "required", message: "Required field." }
+      { type: "required", message: localize("com.recuperalo.mobile.required-field") }
     ]
   };
 
@@ -62,6 +63,7 @@ export class ProfileComponent implements OnInit {
     private modalDialogService: ModalDialogService, private viewContainerRef: ViewContainerRef) { }
 
   ngOnInit() {
+    console.log("ProfileComponent ngoninit");
     this.pageRoute.activatedRoute.pipe(
       switchMap(activatedRoute => activatedRoute.data)
     ).forEach((data) => {
@@ -69,7 +71,7 @@ export class ProfileComponent implements OnInit {
       this.firebaseAppUserKey = Object.keys(data["appUser"])[0];
       this.appUser = data["appUser"][this.firebaseAppUserKey];
       this.firebaseUser = data["firebaseUser"];
-      console.log("user firebase key: ", this.firebaseAppUserKey);
+
       this.profileForm = this.formBuilder.group({
         username: [this.appUser.username, Validators.required, uniqueUsernameValidator(this.appUserService, this.loginService.getCurrentUid())],
         name: this.appUser.name,
@@ -81,6 +83,7 @@ export class ProfileComponent implements OnInit {
     this.loaderUtils.hide();
   }
 
+  //TODO abstract
   public choosePicture(): void {
     let context = imagepicker.create({ mode: "single" });
     context.authorize().then(
@@ -94,31 +97,32 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  //TODO refactor
-  public editProfile(save?: boolean): void {
-    if (this.editMode && save) {
-      if (this.profileForm.valid) {
-        this.loaderUtils.show();
-        this.appUserService.update(this.populateAppUser(this.appUser, this.profileForm.value), this.firebaseAppUserKey)
-          .then(() => this.loaderUtils.hide());
-      } else {
-        dialogs.alert({
-          title: "Alert",
-          message: "Please correct invalid fields",
-          okButtonText: "Continue"
+  public saveProfile(): void {
+    if (this.profileForm.valid) {
+      this.loaderUtils.show();
+      this.appUserService.update(this.populateAppUser(this.appUser, this.profileForm.value), this.firebaseAppUserKey)
+        .then(() => {
+          this.editMode = false;
+          this.loaderUtils.hide();
         });
-        return;
-      }
-    } 
+    } else {
+      dialogs.alert({
+        title: localize("com.recuperalo.mobile.alert"),
+        message: localize("com.recuperalo.mobile.correct-fields"),
+        okButtonText:  localize("com.recuperalo.mobile.continue")
+      });
+      return;
+    }
+  }
 
-    if (save != null && !save && this.profileForm.dirty) {
+  public cancelEditing(): void {
+    if (this.profileForm.dirty) {
       dialogs.confirm({
-        title: "Alert",
-        message: "Your changes will be lost",
-        okButtonText: "Exit",
-        cancelButtonText: "Cancel",
-      }).then(leave => { 
-        console.log("leave value: ", leave);
+        title: localize("com.recuperalo.mobile.alert"),
+        message: localize("com.recuperalo.mobile.unsaved-changes"),
+        okButtonText: localize("com.recuperalo.mobile.exit"),
+        cancelButtonText: localize("com.recuperalo.mobile.cancel"),
+      }).then(leave => {
         if (leave) {
           let aux = this.appUser.birthday;
           this.appUser.birthday = null;
@@ -129,8 +133,13 @@ export class ProfileComponent implements OnInit {
         }
       });
     } else {
-      this.editMode = !this.editMode;
+      this.editMode = false;
     }
+  }
+
+  //Split into two different components next time
+  public switchView(): void {
+    this.editMode = !this.editMode;
   }
 
   public populateAppUser(appUser: AppUser, formModel: any): AppUser {
@@ -145,21 +154,20 @@ export class ProfileComponent implements OnInit {
   }
 
   public onProfileImageLoaded(args: any): void {
-    console.log("image loaded event");
     if (args.object.isLoading) {
       this.imageLoading = true;
-      console.log("profile image isLoading");
     }
     if (args.object.isLoaded) {
-      console.log("profile image isLoaded");
       this.imageLoading = false;
     }
   }
 
   public selectDateView() {
     if (this.editMode) {
-      let displayDate: Date = new Date(this.appUser.birthday);
-      if (displayDate == null) {
+      let displayDate: Date;
+      if (this.appUser.birthday != null) {
+        displayDate = new Date(this.appUser.birthday);
+      } else {
         displayDate = new Date();
       }
 
@@ -211,10 +219,6 @@ export class ProfileComponent implements OnInit {
       return DateUtils.toString(this.birthday);
     }
     return "";
-  }
-
-  get appUserJson() {
-    return JSON.stringify(this.appUser);
   }
 
 }

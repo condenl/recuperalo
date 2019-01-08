@@ -1,20 +1,24 @@
-<GridLayout rows="auto, *, auto" class="gray-bg">
-    <SearchBar row="0" text="" hint="Search" id="search" (textChange)="onTextChanged($event)" 
-        android:loaded="doNotShowAndroidKeyboard" android:height="40"></SearchBar>
+<GridLayout>
+    <GridLayout rows="auto, *, auto" class="gray-bg">
+        <SearchBar row="0" text="" hint="{{ 'com.recuperalo.mobile.search' | L }}" 
+            id="search" (textChange)="onTextChanged($event)" android:loaded="doNotShowAndroidKeyboard" android:height="40"></SearchBar>
+        
+        <ListView row="1" height="100%" [items]="filteredDataset" (itemTap)="onItemTap($event)" separatorColor="#00000000">
+            <ng-template let-lostObjectWrapper="item">
+                <GridLayout columns="auto, auto, *" rows="auto, auto" backgroundColor="#19FFFFFF">
+                    <Image row="0" rowSpan="2" col="0" async="true" height="50" width="60" (loaded)="onImageLoaded($event, extractKey(lostObjectWrapper))" src=""></Image>
+                    <ActivityIndicator [busy]="imagesLoaded[extractKey(lostObjectWrapper)]" row="0" rowSpan="2" col="0" height="50" width="60"></ActivityIndicator>
+                    <Label row="0" col="1" text="{{ 'com.recuperalo.mobile.lost-object.found-by' | L }} {{ extractValue(lostObjectWrapper).username }}" class="lo-item-username"></Label>
+                    <Label row="0" col="2" text="{{ toDate(extractValue(lostObjectWrapper).publishTimestamp) | date:'short' }}" class="lo-item-date"></Label>
+                    <Label row="1" col="1" colSpan="2" text="{{ extractValue(lostObjectWrapper).name }}" textWrap="true" class="lo-item-name"></Label>
+                </GridLayout>
+            </ng-template>
+        </ListView>
     
-    <ListView row="1" height="100%" [items]="filteredDataset" (itemTap)="onItemTap($event)" separatorColor="#00000000">
-        <ng-template let-lostObjectWrapper="item">
-            <GridLayout columns="auto, auto, *" rows="auto, auto" backgroundColor="#19FFFFFF">
-                <Image row="0" rowSpan="2" col="0" async="true" height="50" width="60" src=""></Image>
-                <ActivityIndicator busy="true" row="0" rowSpan="2" col="0" height="50" width="60"></ActivityIndicator>
-                <Label row="0" col="1" text="found by {{ extractValue(lostObjectWrapper).username }}" class="session-time"></Label>
-                <Label row="0" col="2" text="{{ toDate(extractValue(lostObjectWrapper).publishTimestamp) | date:'short' }}" class="session-room"></Label>
-                <Label row="1" col="1" colSpan="2" text="{{ extractValue(lostObjectWrapper).name }}" textWrap="true" class="session-title"></Label>
-            </GridLayout>
-        </ng-template>
-    </ListView>
-
-    <Label *ngIf="filteredDataset == null || filteredDataset.length == 0" 
-        class="text-center font-weight-bold color-white m-t-35" row="1" text="Empty"></Label>
-    <Label row="2" [text]="jsonImages"></Label>
+        <Label *ngIf="filteredDataset == null || filteredDataset.length == 0" 
+            class="text-center font-weight-bold color-white m-t-35" row="1" text="{{ 'com.recuperalo.mobile.empty' | L }}"></Label>
+    </GridLayout>
+    <GridLayout *ngIf="detailNavigation" class="overlay-ro-area">
+        <ActivityIndicator busy="true" class="activity-indicator"></ActivityIndicator>
+    </GridLayout>
 </GridLayout>
