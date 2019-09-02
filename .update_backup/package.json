@@ -2,10 +2,10 @@
   "nativescript": {
     "id": "org.inspt.recuperalo",
     "tns-ios": {
-      "version": "6.0.2"
+      "version": "6.0.1"
     },
     "tns-android": {
-      "version": "6.0.1"
+      "version": "6.0.0"
     }
   },
   "description": "NativeScript Application",
@@ -23,7 +23,6 @@
     "@angular/router": "8.0.0",
     "nativescript-angular": "8.0.2",
     "nativescript-google-maps-sdk": "^2.6.1",
-    "nativescript-image": "^2.2.4",
     "nativescript-imagepicker": "^6.0.5",
     "nativescript-loading-indicator": "^2.4.0",
     "nativescript-localize": "^4.1.0",
@@ -33,12 +32,12 @@
     "ngx-take-until-destroy": "^5.2.3",
     "reflect-metadata": "~0.1.8",
     "rxjs": "~6.3.0",
-    "tns-core-modules": "~6.0.0",
+    "tns-core-modules": "6.0.1",
     "zone.js": "0.9.1"
   },
   "devDependencies": {
     "@nativescript/schematics": "~0.4.0",
-    "nativescript-dev-webpack": "~1.0.0",
+    "nativescript-dev-webpack": "1.0.1",
     "typescript": "3.4.5",
     "@angular/compiler-cli": "8.0.0",
     "@ngtools/webpack": "8.0.0",

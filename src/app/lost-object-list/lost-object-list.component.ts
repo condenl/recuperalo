@@ -32,8 +32,6 @@ export class LostObjectListComponent implements OnInit {
 
     public dateUtils: DateUtils;
 
-    public imagesLoaded: any = {};
-    
     public detailUrl: string;
 
     public detailNavigation: boolean = false;
@@ -51,18 +49,17 @@ export class LostObjectListComponent implements OnInit {
         console.log("LostObjectListComponent ngOnInit");
         this.route
             .data
-            .subscribe(
-                (data: { lostObjects: any, detailUrl: string }) => {
+            .subscribe((data: { lostObjects: any, detailUrl: string }) => {
                     console.log("LostObjectListComponent response just came in!");
                     this.detailUrl = data.detailUrl;
                     if (data.lostObjects != null) {
                         this.masterLostObjects = data.lostObjects;
                         this.filteredDataset = [];
-                        let keys = Object.keys(data.lostObjects);
-                        for (let i = 0; i < keys.length; i++) {
-                            this.imagesLoaded[keys[i]] = true;
-                            let aux = {};
-                            aux[keys[i]] = data.lostObjects[keys[i]];
+                        let aux;
+                        for (let idx in data.lostObjects) {
+                            this.populatePhotoUrl(data.lostObjects[idx]);
+                            aux = {};
+                            aux[idx] = data.lostObjects[idx];
                             this.filteredDataset.push(aux);
                         }
                     }
@@ -72,11 +69,19 @@ export class LostObjectListComponent implements OnInit {
         // this.adService.showBanner();
     }
 
+    public populatePhotoUrl(lostObject: any) {
+        this.lostObjectService.getImage(lostObject.createdBy + "-" + lostObject.publishTimestamp)
+            .then(url => {
+                console.log("url obtained: ", url);
+                lostObject.photoUrl = url;
+        });
+    }
+
     public extractKey(wrapper: any): string {
         return Object.keys(wrapper)[0];
     }
 
-    public extractValue(wrapper: any): LostObject {
+    public ev(wrapper: any): LostObject {
         return wrapper[Object.keys(wrapper)[0]];
     }
 
@@ -100,19 +105,6 @@ export class LostObjectListComponent implements OnInit {
     public onItemTap(event) {
         this.detailNavigation = true;
         this.routeUtils.routeTo(this.detailUrl + Object.keys(this.filteredDataset[event.index])[0]);
-    }
-
-    public onImageLoaded(event, idx: string) {
-        if (event.object.isLoaded) {
-            let image: Image = <Image>event.object;
-            let lostObject: LostObject = this.masterLostObjects[idx];
-            this.lostObjectService.getImage(lostObject.createdBy + "-" + lostObject.publishTimestamp)
-                .then(url => {
-                    console.log("url obtained: ", url);
-                    image.src = url;
-                    this.imagesLoaded[idx] = false;
-                });
-        }
     }
 
 }

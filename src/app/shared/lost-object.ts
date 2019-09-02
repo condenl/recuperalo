@@ -14,5 +14,7 @@ export interface LostObject {
     
     location: any[];
 
+    photoUrl: string;
+
 }
 

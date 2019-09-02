@@ -40,10 +40,7 @@ export class LostObjectService {
      */
     public getImage(path: string): Promise<string> {
         return this.imageService.remoteUrl("lost-object/" + path + ".png")
-            .catch(error => {
-                console.log(error);
-                return this.getDefaultLostObjectImage();
-            });
+            .then(url => url, err => this.getDefaultLostObjectImage());
     }
 
     public findAllByUid(uid: string): Promise<any> {

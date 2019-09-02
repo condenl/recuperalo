@@ -14,7 +14,7 @@ export class DatePickerModalComponent implements OnInit {
 
     private currentDate: Date;
 
-    @ViewChild("datepicker")
+    @ViewChild("datepicker", { static: false })
     private datePickerElement: ElementRef;
 
     constructor(private params: ModalDialogParams) {
