@@ -86,6 +86,7 @@ export class AppUserService {
 
     private getSocialMediaProfileImage(appUser: AppUser): string {
         let url: string = null;
+        console.log("getSocialMediaProfileImage", appUser.userId);
         if (appUser.profileImageUrl != null) {
             url = appUser.profileImageUrl;
         }

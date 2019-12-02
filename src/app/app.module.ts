@@ -16,6 +16,8 @@ import { LostObjectCreateComponent } from "~/app/lost-object-create/lost-object-
 import { LostObjectListComponent } from "~/app/lost-object-list/lost-object-list.component";
 import { LostObjectEditComponent } from "~/app/lost-object-edit/lost-object-edit.component";
 import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view.component";
+import { ChatListComponent } from "./chat-list/chat-list.component";
+import { ChatComponent } from "./chat/chat.component";
 
 // Uncomment and add to NgModule imports if you need to use the HttpClient wrapper
 // import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
@@ -40,7 +42,9 @@ import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view
         LostObjectListComponent,
         LostObjectCreateComponent,
         LostObjectEditComponent,
-        LostObjectViewComponent
+        LostObjectViewComponent,
+        ChatListComponent,
+        ChatComponent
     ],
     providers: [
         ModalDialogService

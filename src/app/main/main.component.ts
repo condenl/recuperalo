@@ -59,6 +59,7 @@ export class MainComponent implements OnInit, OnDestroy {
         this.routeUtils.routeTo("/home/list");
         break;
       case 1:
+        this.routeUtils.routeTo("/home/chats");
         break;
       case 2:
         this.routeUtils.routeTo("/home/found");

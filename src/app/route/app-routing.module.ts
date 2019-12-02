@@ -19,6 +19,8 @@ import { LostObjectResolver } from "~/app/route/resolver/lost-object-resolver.se
 import { LostObjectImageResolver } from "~/app/route/resolver/lost-object-image-resolver.service";
 import { LostObjectListResolver } from "~/app/route/resolver/lost-object-list-resolver.service";
 import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view.component";
+import { ChatComponent } from "../chat/chat.component";
+import { ChatListComponent } from "../chat-list/chat-list.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
@@ -33,6 +35,13 @@ const routes: Routes = [
             },
             data: {
                 detailUrl: "lost-object-view/"
+            }
+        },
+        {
+            path: 'chats', 
+            component: ChatListComponent, 
+            resolve: {
+                appUser: AppUserResolver
             }
         },
         {
@@ -75,6 +84,11 @@ const routes: Routes = [
             profileImageUrl: ProfileImageResolver,
             appUser: AppUserResolver,
             firebaseUser: FirebaseUserResolver
+        }
+    },
+    { path: "chat/:itemId", component: ChatComponent, 
+        resolve: {
+            appUser: AppUserResolver
         }
     }
 ];

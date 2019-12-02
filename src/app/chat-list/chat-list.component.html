@@ -1,0 +1,12 @@
+<StackLayout>
+    <ListView height="100%" padding="5" [items]="chats$ | async">
+        <ng-template let-item="item">
+            <GridLayout columns="*" rows="auto" class="msg">
+                <StackLayout class="them" orientation="horizontal" horizontalAlignment="left">
+                    <Image class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" src="item.imageUrl" col="1"></Image>
+                    <Label [text]='chatDescription(item)' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
+                </StackLayout>
+            </GridLayout>
+        </ng-template>
+    </ListView>
+</StackLayout>

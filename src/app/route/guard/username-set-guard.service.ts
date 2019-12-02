@@ -32,7 +32,7 @@ export class UsernameSetGuard implements CanActivate {
                         message: localize("com.recuperalo.mobile.required.username"),
                         okButtonText: localize("com.recuperalo.mobile.continue")
                     }).then(() => {
-                        this.loaderUtils.show();
+                        // this.loaderUtils.show();
                         this.homeActivityIndicatorService.notBusy();
                         this.routeUtils.routeTo("/profile");
                     });
