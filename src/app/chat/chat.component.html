@@ -2,8 +2,8 @@
     <ListView height="90%" margin-bottom="50" padding="5" #list [items]="messages$ | async">
         <ng-template let-item="item">
             <GridLayout columns="*" rows="auto" class="msg">
-                <StackLayout [class]="filter(item.from)" orientation="horizontal" [horizontalAlignment]="align(item.from)">
-                    <Image [visibility]="showImage(item.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" src="~/images/k1.png" col="1"></Image>
+                <StackLayout [class]="item.from == this.appUser.userId ? 'me': 'them'" orientation="horizontal" [horizontalAlignment]="item.from == this.appUser.userId ? 'right' : 'left'">
+                    <Image [visibility]="item.from == this.appUser.userId ? 'collapsed' : 'visible'" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" src="lostObject.createdByAppUser.profileImageUrl" col="1"></Image>
                     <Label [text]='item.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
                 </StackLayout>
             </GridLayout>

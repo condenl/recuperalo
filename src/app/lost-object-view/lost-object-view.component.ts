@@ -5,6 +5,8 @@ import { LostObject } from '~/app/shared/lost-object';
 import { MapView } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
+import { ChatService } from '../shared/chat.service';
+import { Chat } from '../shared/chat';
 
 @Component({
     selector: 'ns-lost-object-view',
@@ -41,11 +43,12 @@ export class LostObjectViewComponent implements OnInit {
     }
 
     public contact() {
-
+        // TODO do not show the button if it's the same user
+        this.routeUtils.routeTo("/chat/" + this.lostObjectFirebaseKey);
     }
 
     public onMapReady = (event) => {
         this.mapView = event.object;
-    };
+    }
 
 }

@@ -1,3 +1,5 @@
+import { AppUser } from "./app-user";
+
 export interface LostObject {
     
     createdBy: string;
@@ -15,6 +17,9 @@ export interface LostObject {
     location: any[];
 
     photoUrl: string;
+
+    // transient
+    createdByAppUser: AppUser;
 
 }
 

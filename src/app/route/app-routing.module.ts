@@ -21,6 +21,7 @@ import { LostObjectListResolver } from "~/app/route/resolver/lost-object-list-re
 import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view.component";
 import { ChatComponent } from "../chat/chat.component";
 import { ChatListComponent } from "../chat-list/chat-list.component";
+import { ChatResolver } from "./resolver/chat-resolver.service";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
@@ -65,14 +66,14 @@ const routes: Routes = [
         }
       ]
     },
-    { path: "lost-object-edit/:firebaseKey", component: LostObjectEditComponent, canActivate: [UsernameSetGuard],
+    { path: "lost-object-edit/:itemId", component: LostObjectEditComponent, canActivate: [UsernameSetGuard],
         resolve: { 
             appUser: AppUserResolver,
             imageUrl: LostObjectImageResolver,
             lostObject: LostObjectResolver
         }
     },
-    { path: "lost-object-view/:firebaseKey", component: LostObjectViewComponent,
+    { path: "lost-object-view/:itemId", component: LostObjectViewComponent,
         resolve: { 
             appUser: AppUserResolver,
             imageUrl: LostObjectImageResolver,
@@ -88,7 +89,9 @@ const routes: Routes = [
     },
     { path: "chat/:itemId", component: ChatComponent, 
         resolve: {
-            appUser: AppUserResolver
+            appUser: AppUserResolver,
+            chat: ChatResolver,
+            lostObject: LostObjectResolver
         }
     }
 ];

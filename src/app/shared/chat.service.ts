@@ -30,6 +30,38 @@ export class ChatService {
     });
   }
   
+  findById(itemId: string, userId: string): Promise<{ [key: string]: Chat; }> {
+    return firebase.query(function(result) {
+        if (result.error)
+         console.log("Error retrieving chat: " + result.key);
+        },
+        "/chats",
+        {
+          singleEvent: true,
+          orderBy: {
+            type: firebase.QueryOrderByType.CHILD,
+            value: 'itemId'
+          },
+          range: {
+            type: firebase.QueryRangeType.EQUAL_TO,
+            value: itemId
+          }
+        }
+    ).then(
+        result => this.filterByUser([...result.value], userId)
+    );
+  }
+  
+  filterByUser(chats: Array<Chat>, userId: string): Chat {
+    let chat: Chat = null;
+    for (let i = 0; i < chats.length; i++) {
+      if (chats[i].users && chats[i].users.indexOf(userId) > -1) {
+        chat = chats[i];
+      }
+    }
+    return chat;
+  }
+
   getChats(fromId: string): Observable<any> {
     return new Observable((observer: any) => {
       let path = 'chats';
