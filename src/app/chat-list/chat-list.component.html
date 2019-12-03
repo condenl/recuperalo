@@ -1,5 +1,5 @@
-<StackLayout>
-    <ListView height="100%" padding="5" [items]="chats$ | async">
+<GridLayout columns="*" rows="*" class="gray-bg">
+    <ListView row="0" col="0" height="100%" padding="5" [items]="chats$ | async">
         <ng-template let-item="item">
             <GridLayout columns="*" rows="auto" class="msg">
                 <StackLayout class="them" orientation="horizontal" horizontalAlignment="left">
@@ -9,4 +9,6 @@
             </GridLayout>
         </ng-template>
     </ListView>
-</StackLayout>
+    <Label row="0" col="0" *ngIf="!hasContent" class="text-center font-weight-bold color-white m-t-35" 
+        text="{{ 'com.recuperalo.mobile.empty' | L }}"></Label>
+</GridLayout>

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
-import { LoginService } from '~/app/shared/login.service';
 import { LostObjectService } from '~/app/shared/lost-object.service';
 import { LostObject } from '~/app/shared/lost-object';
 import { AppUserService } from '~/app/shared/app-user.service';

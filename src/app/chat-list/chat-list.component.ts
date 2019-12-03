@@ -18,6 +18,8 @@ export class ChatListComponent implements OnInit {
 
   private chats$: Observable<any>;
 
+  private hasContent: boolean;
+
   constructor(private route: ActivatedRoute, 
     private homeActivityIndicatorService: HomeActivityIndicatorService,
     private routeUtils: RouteUtilsService,
@@ -30,14 +32,19 @@ export class ChatListComponent implements OnInit {
             this.appUser = data.appUser[Object.keys(data.appUser)[0]];
             this.chats$ = <any>this.chatService.getChats(this.appUser.userId);
         });
-    
+    this.hasContent = false;
     this.homeActivityIndicatorService.notBusy();
   }
 
   chatDescription(chat: Chat): string {
+    this.setHasContent();
     let description: string = chat.lostObject.description ? chat.lostObject.description : "";
     description = description.length > 10 ? description.substring(0, 10) + "..." : description;
     return chat.lostObject.name + " " + description;
+  }
+
+  setHasContent(): void {
+    this.hasContent = true;
   }
 
 }

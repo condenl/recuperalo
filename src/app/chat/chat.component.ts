@@ -27,7 +27,7 @@ export class ChatComponent implements OnInit {
 
   private textfield: TextField;
   
-  private appUser: AppUser;
+  private currentUser: AppUser;
 
   private itemId: String;
   
@@ -38,19 +38,18 @@ export class ChatComponent implements OnInit {
   private lostObject: LostObject;
   
   public constructor(private route: ActivatedRoute, 
-    private routeSnapshot: ActivatedRouteSnapshot, 
     private routeUtils: RouteUtilsService, 
     private chatService: ChatService) { }
 
   ngOnInit(): void {
-    this.itemId = this.routeSnapshot.params['itemId'];
+    this.itemId = this.route.snapshot.params['itemId'];
     this.route
       .data
       .subscribe((data) => {
-          this.appUser = data.appUser[Object.keys(data.appUser)[0]] as AppUser;
+          this.currentUser = data.appUser[Object.keys(data.appUser)[0]] as AppUser;
           this.chat = data.chat[Object.keys(data.chat)[0]] as Chat;
           this.lostObject = data.lostObject[Object.keys(data.lostObject)[0]] as LostObject;
-          this.messages$ = <any>this.chatService.getMessages(this.itemId, this.appUser.userId);
+          this.messages$ = <any>this.chatService.getMessages(this.itemId, this.currentUser.userId);
         }
       );
   }
@@ -66,12 +65,12 @@ export class ChatComponent implements OnInit {
       this.list.refresh();
   }
 
-  message(itemId: string, toId: string, message: string) {
+  sendMessage(toId: string, message: string) {
     let promise = Promise.resolve();
     if (!this.chat) {
-        promise = this.chatService.chat(this.itemId, [this.appUser.userId, toId]);
+        promise = this.chatService.chat(this.itemId, [this.currentUser.userId, this.lostObject.createdBy]);
     }
-    promise.then(this.chatService.sendMessage(itemId, this.appUser.userId, toId, message)).then((data: any) => {
+    promise.then(this.chatService.sendMessage(this.itemId, this.currentUser.userId, this.lostObject.createdBy, message)).then((data: any) => {
       this.scroll(this.list.items.length);
     });
     this.textfield.text = '';

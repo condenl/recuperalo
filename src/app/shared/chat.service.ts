@@ -48,15 +48,19 @@ export class ChatService {
           }
         }
     ).then(
-        result => this.filterByUser([...result.value], userId)
+        result => {
+          console.log("chat findById", result);
+          this.filterByUser(result.value, userId);
+        }
     );
   }
   
-  filterByUser(chats: Array<Chat>, userId: string): Chat {
+  filterByUser(chats: any, userId: string): Chat {
     let chat: Chat = null;
-    for (let i = 0; i < chats.length; i++) {
-      if (chats[i].users && chats[i].users.indexOf(userId) > -1) {
-        chat = chats[i];
+    let chatKeys: Array<string> = Object.keys(chats);
+    for (let i = 0; i < chatKeys.length; i++) {
+      if (chats[chatKeys[i]].users && chat[chatKeys[i]].users.indexOf(userId) > -1) {
+        chat = chats[chatKeys[i]];
       }
     }
     return chat;
@@ -72,18 +76,26 @@ export class ChatService {
         });
       };
       firebase.addValueEventListener(onValueEvent, `/${path}`);
-    }).pipe(mergeMap(c => from(this.populateChat(fromId, c as Chat))), share());
+    }).pipe(mergeMap(c => from(this.populateChat(fromId, c as Array<Chat>))), share());
   }
 
-  populateChat(fromId: string, chat: Chat): Promise<Chat> {
-    let userId: string = this.getFirstFromArray(fromId, chat.users);
-    return Promise.all([this.lostObjectService.findByFirebaseKey(chat.itemId),
-      this.appUserService.getProfileImage(userId)])
-        .then(arr => {
-          chat.lostObject = arr[0];
-          chat.imageUrl = arr[1];
-          return chat;
-        }) as Promise<Chat>;
+  populateChat(fromId: string, chats: Array<Chat>): Promise<Chat> {
+    console.log("populateChat from getChats", chats);
+    let chatPromise;
+    if (chats && chats.length > 0) {
+      let chat = chats[0];
+      let userId: string = this.getFirstFromArray(fromId, chat.users);
+      chatPromise = Promise.all([this.lostObjectService.findByFirebaseKey(chat.itemId),
+        this.appUserService.getProfileImage(userId)])
+          .then(arr => {
+            chat.lostObject = arr[0];
+            chat.imageUrl = arr[1];
+            return chat;
+          });
+    } else {
+      chatPromise = Promise.resolve();
+    }
+    return chatPromise as Promise<Chat>;
   }
 
   getFirstFromArray(exclude: string, arr: Array<string>): string {
