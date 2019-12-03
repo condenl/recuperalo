@@ -14,5 +14,6 @@
         <MapView width="90%" latitude="{{ lostObject.location[0] }}" 
             longitude="{{ lostObject.location[1] }}" (mapReady)="onMapReady($event)"></MapView>
     </StackLayout>
-    <Button class="btn btn-primary m-b-10 green-bg" text="Contact" (tap)="contact()"></Button>
+    <Button [visibility]="!isCurrentUserOwner() ? 'visible' : 'collapsed'" class="btn btn-primary m-b-10 green-bg" text="{{ 'com.recuperalo.mobile.contact' | L }}" (tap)="contact()"></Button>
+    <Label [visibility]="isCurrentUserOwner() ? 'visible' : 'collapsed'" class="m-b-10" text="{{ 'com.recuperalo.mobile.item-owned' | L }}"></Label>
 </FlexboxLayout>
