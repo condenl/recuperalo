@@ -11,9 +11,9 @@ export class AppUserResolver implements Resolve<Promise<any>> {
 
     constructor(private loginService: LoginService, private appUserService: AppUserService) { }
 
-    public resolve(): Promise<{ [key: string]: AppUser; }> {
+    public resolve(): Promise<AppUser> {
         console.log("resolving app user");
-        return this.appUserService.findById(this.loginService.getCurrentUid());
+        return this.appUserService.findById(this.loginService.getCurrentId());
     }
 
 }

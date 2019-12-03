@@ -22,9 +22,9 @@ export class UsernameSetGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         console.log("evaluating username-set-guard");
         
-        return this.appUserService.findById(this.loginService.getCurrentUid())
+        return this.appUserService.findById(this.loginService.getCurrentId())
             .then(appUser => {
-                if (appUser[Object.keys(appUser)[0]].username != null) {
+                if (appUser.username != null) {
                     return true;
                 } else {
                     dialogs.alert({

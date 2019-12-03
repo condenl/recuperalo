@@ -1,12 +1,14 @@
 export interface AppUser {
     
-    userId: string;
+    id: string;
+
+    uid: string;
 
     username: string;
 
     name: string;
 
-    profileImageUrl: string;
+    profilePhotoUrl: string;
 
     birthday: number;
 

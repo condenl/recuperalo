@@ -12,7 +12,7 @@ export class LostObjectFoundResolver implements Resolve<Promise<any>> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<any> {
         console.log("resolving lost objects found");
-        return this.lostObjectService.findAllByUid(this.loginService.getCurrentUid());
+        return this.lostObjectService.findAllById(this.loginService.getCurrentId());
     }
 
 }

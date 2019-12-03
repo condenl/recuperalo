@@ -13,8 +13,8 @@
     <StackLayout class="profile-container">
         <GridLayout columns="*, *" rows="auto, auto, auto">
             <StackLayout rowSpan="2">
-                <Image *ngIf="profileImageUrl" loadMode="async" class="profile-picture" src="{{profileImageUrl}}" 
-                    (loaded)="onProfileImageLoaded($event)" stretch="aspectFill"></Image>
+                <Image *ngIf="profilePhotoUrl" loadMode="async" class="profile-picture" src="{{ profilePhotoUrl }}" 
+                    (loaded)="onProfilePhotoLoaded($event)" stretch="aspectFill"></Image>
             </StackLayout>
             <GridLayout *ngIf="imageLoading"  rowSpan="2" columns="*" rows="*" class="image-loading">
                 <ActivityIndicator verticalAlignment="middle" color="white" busy="true"></ActivityIndicator>

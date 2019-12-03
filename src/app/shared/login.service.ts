@@ -10,7 +10,7 @@ const firebase = require("nativescript-plugin-firebase");
 })
 export class LoginService {
 
-    private currentUid: string = "";
+    private currentId: string = "";
 
     constructor(private routeUtils: RouteUtilsService, private appUserService: AppUserService) { }
     
@@ -36,34 +36,38 @@ export class LoginService {
         console.dir(user.additionalUserInfo.isNewUser);
         if (user.additionalUserInfo.isNewUser) {
             this.appUserService.create({
-                userId: user.uid,
+                uid: user.uid,
                 email: user.email,
-                profileImageUrl: this.getSocialMediaProfileImage(user)
+                profilePhotoUrl: this.getSocialMediaProfilePhoto(user)
             } as AppUser)
                 .then(
                     result => {
                         console.dir(result);
-                        console.log("created key: " + result.key)
-                        this.currentUid = user.uid;
+                        console.log("created key: " + result.key);
+                        console.log("created uid: " + user.uid);
+                        this.currentId = result.key;
                         this.routeUtils.routeTo(url, "slideTop");
                     }
                 );
         } else {
-            this.currentUid = user.uid;
-            this.routeUtils.routeTo(url, "slideTop");
+            this.appUserService.findByUid(user.uid)
+                .then(appUser => {
+                    this.currentId = appUser.id;
+                    this.routeUtils.routeTo(url, "slideTop");
+                });
         }
     }
 
-    private getSocialMediaProfileImage(user: any): string {
+    private getSocialMediaProfilePhoto(user: any): string {
         return user.additionalUserInfo.providerId == 'facebook.com' ? user.additionalUserInfo.profile.picture.data.url : null
     }
 
-    public getCurrentUid(): string {
-        return this.currentUid;
+    public getCurrentId(): string {
+        return this.currentId;
     }
 
-    public setCurrentUid(currentUid: string): void {
-        this.currentUid = currentUid;
+    public setCurrentId(currentId: string): void {
+        this.currentId = currentId;
     }
 
     public getCurrentUser(): Promise<any> {
@@ -72,7 +76,7 @@ export class LoginService {
 
     public logOut(): void {
         firebase.logout();
-        this.currentUid = "";
+        this.currentId = "";
     }
 
 }

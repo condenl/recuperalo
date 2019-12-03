@@ -6,9 +6,7 @@ import { MainComponent } from "~/app/main/main.component";
 import { ProfileComponent } from "~/app/profile/profile.component";
 import { AuthGuard } from "~/app/route/guard/auth-guard.service";
 import { BypassLoginGuard } from "~/app/route/guard/bypass-login-guard.service";
-import { ProfileImageResolver } from "~/app/route/resolver/profile-image-resolver.service";
 import { AppUserResolver } from "~/app/route/resolver/app-user-resolver.service";
-import { FirebaseUserResolver } from "~/app/route/resolver/firebase-user-resolver.service";
 import { LostObjectListComponent } from "~/app/lost-object-list/lost-object-list.component";
 import { LostObjectCreateComponent } from "~/app/lost-object-create/lost-object-create.component";
 import { NoPhotoResolver } from "~/app/route/resolver/no-photo-resolver.service";
@@ -16,12 +14,12 @@ import { LostObjectFoundResolver } from "~/app/route/resolver/lost-object-found-
 import { UsernameSetGuard } from "~/app/route/guard/username-set-guard.service";
 import { LostObjectEditComponent } from "~/app/lost-object-edit/lost-object-edit.component";
 import { LostObjectResolver } from "~/app/route/resolver/lost-object-resolver.service";
-import { LostObjectImageResolver } from "~/app/route/resolver/lost-object-image-resolver.service";
 import { LostObjectListResolver } from "~/app/route/resolver/lost-object-list-resolver.service";
 import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view.component";
 import { ChatComponent } from "../chat/chat.component";
 import { ChatListComponent } from "../chat-list/chat-list.component";
 import { ChatResolver } from "./resolver/chat-resolver.service";
+import { DefaultProfilePhotoResolver } from "./resolver/default-profile-photo-resolver.service";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
@@ -32,7 +30,8 @@ const routes: Routes = [
             path: 'list',
             component: LostObjectListComponent,
             resolve: {
-                lostObjects: LostObjectListResolver
+                lostObjects: LostObjectListResolver,
+                noPhotoUrl: NoPhotoResolver
             },
             data: {
                 detailUrl: "lost-object-view/"
@@ -42,7 +41,8 @@ const routes: Routes = [
             path: 'chats', 
             component: ChatListComponent, 
             resolve: {
-                appUser: AppUserResolver
+                appUser: AppUserResolver,
+                defaultProfilePhotoUrl: DefaultProfilePhotoResolver
             }
         },
         {
@@ -58,7 +58,8 @@ const routes: Routes = [
             path: 'found',
             component: LostObjectListComponent,
             resolve: {
-                lostObjects: LostObjectFoundResolver
+                lostObjects: LostObjectFoundResolver,
+                noPhotoUrl: NoPhotoResolver
             },
             data: {
                 detailUrl: "lost-object-edit/"
@@ -66,30 +67,30 @@ const routes: Routes = [
         }
       ]
     },
-    { path: "lost-object-edit/:itemId", component: LostObjectEditComponent, canActivate: [UsernameSetGuard],
+    { path: "lost-object-edit/:itemId", component: LostObjectEditComponent, canActivate: [ AuthGuard, UsernameSetGuard ],
         resolve: { 
             appUser: AppUserResolver,
-            imageUrl: LostObjectImageResolver,
-            lostObject: LostObjectResolver
+            lostObject: LostObjectResolver,
+            noPhotoUrl: NoPhotoResolver
         }
     },
-    { path: "lost-object-view/:itemId", component: LostObjectViewComponent,
+    { path: "lost-object-view/:itemId", component: LostObjectViewComponent, canActivate: [ AuthGuard ],
         resolve: { 
             appUser: AppUserResolver,
-            imageUrl: LostObjectImageResolver,
-            lostObject: LostObjectResolver
+            lostObject: LostObjectResolver,
+            noPhotoUrl: NoPhotoResolver
         }
     },
     { path: "profile", component: ProfileComponent, canActivate: [ AuthGuard ], 
-        resolve: { 
-            profileImageUrl: ProfileImageResolver,
-            appUser: AppUserResolver,
-            firebaseUser: FirebaseUserResolver
-        }
-    },
-    { path: "chat/:itemId", component: ChatComponent, 
         resolve: {
             appUser: AppUserResolver,
+            defaultProfilePhotoUrl: DefaultProfilePhotoResolver
+        }
+    },
+    { path: "chat/:itemId", component: ChatComponent, canActivate: [ AuthGuard ],
+        resolve: {
+            appUser: AppUserResolver,
+            defaultProfilePhotoUrl: DefaultProfilePhotoResolver,
             chat: ChatResolver,
             lostObject: LostObjectResolver
         }

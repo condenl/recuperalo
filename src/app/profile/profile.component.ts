@@ -18,7 +18,6 @@ import { DateUtils } from '~/app/shared/date-utils';
 import { localize } from "nativescript-localize";
 
 var dialogs = require("tns-core-modules/ui/dialogs");
-var fs = require("tns-core-modules/file-system");
 var imagepicker = require("nativescript-imagepicker");
 
 @Component({
@@ -29,19 +28,15 @@ var imagepicker = require("nativescript-imagepicker");
 })
 export class ProfileComponent implements OnInit {
 
-  private profileImageUrl: string = "";
+  private profilePhotoUrl: string = "";
 
   private appUser: AppUser;
-
-  private firebaseAppUserKey: string;
 
   private imageLoading: boolean = true;
 
   private editMode: boolean = false;
 
   private profileForm: FormGroup;
-
-  private firebaseUser: any;
 
   profile_validation_messages = {
     username: [
@@ -67,13 +62,10 @@ export class ProfileComponent implements OnInit {
     this.pageRoute.activatedRoute.pipe(
       switchMap(activatedRoute => activatedRoute.data)
     ).forEach((data) => {
-      this.profileImageUrl = data["profileImageUrl"];
-      this.firebaseAppUserKey = Object.keys(data["appUser"])[0];
-      this.appUser = data["appUser"][this.firebaseAppUserKey];
-      this.firebaseUser = data["firebaseUser"];
-
+      this.appUser = data["appUser"];
+      this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : data["defaultProfilePhotoUrl"];
       this.profileForm = this.formBuilder.group({
-        username: [this.appUser.username, Validators.required, uniqueUsernameValidator(this.appUserService, this.loginService.getCurrentUid())],
+        username: [this.appUser.username, Validators.required, uniqueUsernameValidator(this.appUserService, this.appUser.id)],
         name: this.appUser.name,
         birthday: new Date(this.appUser.birthday),
         email: [this.appUser.email, [Validators.required, Validators.email]],
@@ -91,8 +83,8 @@ export class ProfileComponent implements OnInit {
     ).then(selection => {
       selection.forEach(selected => {
         console.log("about to upload the image");
-        this.appUserService.uploadProfileImage(selected, this.loginService.getCurrentUid())
-          .then(remoteUrl => this.profileImageUrl = remoteUrl);
+        this.appUserService.uploadProfilePhoto(selected, this.appUser.id)
+          .then(remoteUrl => this.profilePhotoUrl = remoteUrl);
       })
     });
   }
@@ -100,7 +92,7 @@ export class ProfileComponent implements OnInit {
   public saveProfile(): void {
     if (this.profileForm.valid) {
       this.loaderUtils.show();
-      this.appUserService.update(this.populateAppUser(this.appUser, this.profileForm.value), this.firebaseAppUserKey)
+      this.appUserService.update(this.populateAppUser(this.appUser, this.profileForm.value), this.appUser.id)
         .then(() => {
           this.editMode = false;
           this.loaderUtils.hide();
@@ -137,7 +129,6 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  //Split into two different components next time
   public switchView(): void {
     this.editMode = !this.editMode;
   }
@@ -150,10 +141,11 @@ export class ProfileComponent implements OnInit {
     if (formModel.birthday != null) {
       appUser.birthday = formModel.birthday.getTime();
     }
+    appUser.profilePhotoUrl = this.profilePhotoUrl;
     return appUser;
   }
 
-  public onProfileImageLoaded(args: any): void {
+  public onProfilePhotoLoaded(args: any): void {
     if (args.object.isLoading) {
       this.imageLoading = true;
     }

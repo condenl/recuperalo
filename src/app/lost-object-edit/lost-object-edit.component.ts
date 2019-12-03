@@ -6,11 +6,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { registerElement } from "nativescript-angular/element-registry";
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
-import { LoginService } from '~/app/shared/login.service';
 import { LostObject } from '~/app/shared/lost-object';
 import { MapView } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
+import { Image } from '../shared/image';
+import { UUIDUtils } from '../shared/uuid-utils';
 
 var fs = require("tns-core-modules/file-system");
 var imagepicker = require("nativescript-imagepicker");
@@ -23,11 +24,11 @@ var imagepicker = require("nativescript-imagepicker");
 })
 export class LostObjectEditComponent implements OnInit {
 
-    private lostObjectImageUrl: string;
+    private images: Array<Image>;
+
+    private maxOrdinal: number = 0;
 
     private lostObjectEditForm: FormGroup;
-
-    private lostObjectFirebaseKey: string;
 
     private lostObject: LostObject;
 
@@ -35,33 +36,45 @@ export class LostObjectEditComponent implements OnInit {
 
     private appUser: AppUser;
 
+    private noPhotoUrl: string;
+
     constructor(private lostObjectService: LostObjectService, 
         private loaderUtils: LoaderUtilsService,
         private route: ActivatedRoute, 
         private formBuilder: FormBuilder,
         private homeActivityIndicatorService: HomeActivityIndicatorService,
-        private loginService: LoginService,
         private routeUtils: RouteUtilsService) { }
 
     ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: { imageUrl: string; 
-                    appUser: AppUser;
+            .subscribe((data: { appUser: AppUser;
+                    noPhotoUrl: string; 
                     lostObject: any }) => {
-                this.lostObjectImageUrl = data.imageUrl;
-                console.log(data.lostObject);
-                this.lostObjectFirebaseKey = Object.keys(data.lostObject)[0];
-                this.lostObject = data.lostObject[this.lostObjectFirebaseKey];
-                console.log(this.lostObject);
-                this.appUser = data.appUser[Object.keys(data.appUser)[0]];
+                this.lostObject = data.lostObject;
+                this.appUser = data.appUser;
+                this.noPhotoUrl = data.noPhotoUrl;
                 this.lostObjectEditForm = this.formBuilder.group({
                     name: [this.lostObject.name, Validators.required],
                     description: [this.lostObject.description, Validators.required]
                 });
+                this.initImagesState(this.lostObject);
             });
 
         this.homeActivityIndicatorService.notBusy();
+    }
+
+    private initImagesState(lostObject: LostObject) {
+        let result: Array<Image> = [{ url: this.noPhotoUrl } as Image];
+        if (lostObject.photos && lostObject.photos.length > 0) {
+            result = lostObject.photos;
+            for (let i = 0; i < lostObject.photos.length; i++) {
+                if (lostObject.photos[i].ordinal && lostObject.photos[i].ordinal > this.maxOrdinal) {
+                    this.maxOrdinal = lostObject.photos[i].ordinal;
+                }
+            }
+        }
+        this.images = result;
     }
 
     public choosePicture(): void {
@@ -71,9 +84,10 @@ export class LostObjectEditComponent implements OnInit {
         ).then(selection => {
             selection.forEach(selected => {
             console.log("about to upload the lost object image");
-            this.lostObjectService.uploadImage(selected, this.loginService.getCurrentUid() + "-" + this.lostObject.publishTimestamp)
-                .then(remoteUrl => this.lostObjectImageUrl = remoteUrl);
-            })
+            let uuid = UUIDUtils.uuidv4();
+            this.lostObjectService.uploadImage(selected, uuid)
+                .then(remoteUrl => this.images.push(this.populateImage(uuid, remoteUrl)));
+            });
         });
         
     }
@@ -83,7 +97,7 @@ export class LostObjectEditComponent implements OnInit {
     };
 
     public saveLostObject(update: boolean) {
-        this.lostObjectService.update(this.populateLostObject(), this.lostObjectFirebaseKey)
+        this.lostObjectService.update(this.populateLostObject(), this.lostObject.id)
             .then(() => {
                 this.routeUtils.routeTo("/home/found");
             });
@@ -93,20 +107,29 @@ export class LostObjectEditComponent implements OnInit {
         this.routeUtils.routeTo("/home/found");
     }
 
+    private populateImage(uuid: string, url: string) {
+        let image: Image = {} as Image;
+        image.uuid = uuid;
+        image.url = url;
+        image.ordinal = this.maxOrdinal++;
+        return image;
+    }
+
     private populateLostObject(): LostObject {
         let lostObject: LostObject = {} as LostObject;
-        lostObject.createdBy = this.loginService.getCurrentUid();
+        lostObject.createdById = this.appUser.id;
         lostObject.name = this.name.value;
         lostObject.description = this.description.value;
         lostObject.publishTimestamp = this.lostObject.publishTimestamp;
         lostObject.lastUpdateTimestamp = new Date().getTime();
         lostObject.location = [this.mapView["latitude"] , this.mapView["longitude"]];
         lostObject.username = this.appUser.username;
+        lostObject.photos = this.images;
         return lostObject;
     }
 
     public deleteLostObject() {
-        this.lostObjectService.delete(this.lostObjectFirebaseKey)
+        this.lostObjectService.delete(this.lostObject.id)
             .then(() => this.routeUtils.routeTo("/home/found"));
     }
 

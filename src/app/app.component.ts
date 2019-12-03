@@ -16,7 +16,9 @@ export class AppComponent implements OnInit {
         firebase.init({
             onAuthStateChanged: data => {
                 console.log("authStateChanged: ", JSON.stringify(data));
-                this.loginService.setCurrentUid(data.loggedIn ? data.user.uid : "");
+                if (!data.loggedIn) { // to immediately re-logon the user when his session expires
+                    this.loginService.setCurrentId(null);
+                }
             }
         }).then(
             instance => console.log("firebase.init done"),

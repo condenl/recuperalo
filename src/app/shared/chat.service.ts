@@ -30,7 +30,7 @@ export class ChatService {
     });
   }
   
-  findById(itemId: string, userId: string): Promise<{ [key: string]: Chat; }> {
+  findById(itemId: string, userId: string): Promise<Chat> {
     return firebase.query(function(result) {
         if (result.error)
          console.log("Error retrieving chat: " + result.key);
@@ -60,13 +60,13 @@ export class ChatService {
     let chatKeys: Array<string> = Object.keys(chats);
     for (let i = 0; i < chatKeys.length; i++) {
       if (chats[chatKeys[i]].users && chat[chatKeys[i]].users.indexOf(userId) > -1) {
-        chat = chats[chatKeys[i]];
+        chat = (<any>Object).assign({id: chatKeys[i]}, chats[chatKeys[i]]) as Chat;
       }
     }
     return chat;
   }
 
-  getChats(fromId: string): Observable<any> {
+  getChats(fromId: string, defaultProfilePhotoUrl: string): Observable<any> {
     return new Observable((observer: any) => {
       let path = 'chats';
       
@@ -76,20 +76,20 @@ export class ChatService {
         });
       };
       firebase.addValueEventListener(onValueEvent, `/${path}`);
-    }).pipe(mergeMap(c => from(this.populateChat(fromId, c as Array<Chat>))), share());
+    }).pipe(mergeMap(c => from(this.populateChat(fromId, c as Array<Chat>, defaultProfilePhotoUrl))), share());
   }
 
-  populateChat(fromId: string, chats: Array<Chat>): Promise<Chat> {
+  populateChat(fromId: string, chats: Array<Chat>, defaultProfilePhotoUrl: string): Promise<Chat> {
     console.log("populateChat from getChats", chats);
     let chatPromise;
     if (chats && chats.length > 0) {
       let chat = chats[0];
       let userId: string = this.getFirstFromArray(fromId, chat.users);
-      chatPromise = Promise.all([this.lostObjectService.findByFirebaseKey(chat.itemId),
-        this.appUserService.getProfileImage(userId)])
+      chatPromise = Promise.all([this.lostObjectService.findById(chat.itemId),
+        this.appUserService.findById(userId)])
           .then(arr => {
             chat.lostObject = arr[0];
-            chat.imageUrl = arr[1];
+            chat.imageUrl = arr[1].profilePhotoUrl ? arr[1].profilePhotoUrl : defaultProfilePhotoUrl;
             return chat;
           });
     } else {
@@ -193,7 +193,7 @@ export class ChatService {
         { "message": message, "itemId": itemId, "from": fromId, "to": toId, "date": 0 - Date.now()}
       ).then(
         function (result: any) {
-          return "chatted";
+          return "message sent";
         },
         function (errorMessage: any) {
           console.log(errorMessage);

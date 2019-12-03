@@ -4,13 +4,13 @@
             id="search" (textChange)="onTextChanged($event)" android:loaded="doNotShowAndroidKeyboard" android:height="40"></SearchBar>
         
         <ListView row="1" height="100%" [items]="filteredDataset" (itemTap)="onItemTap($event)" separatorColor="#00000000">
-            <ng-template let-lostObjectWrapper="item">
+            <ng-template let-lostObject="item">
                 <GridLayout columns="auto, auto, *" rows="auto, auto" backgroundColor="#19FFFFFF">
-                    <Image row="0" rowSpan="2" col="0" async="true" height="50" width="60" src="{{ ev(lostObjectWrapper).photoUrl }}"></Image>
-                    <ActivityIndicator [busy]="ev(lostObjectWrapper).photoUrl == null" row="0" rowSpan="2" col="0" height="50" width="60"></ActivityIndicator>
-                    <Label row="0" col="1" text="{{ 'com.recuperalo.mobile.lost-object.found-by' | L }} {{ ev(lostObjectWrapper).username }}" class="lo-item-username"></Label>
-                    <Label row="0" col="2" text="{{ toDate(ev(lostObjectWrapper).publishTimestamp) | date:'short' }}" class="lo-item-date"></Label>
-                    <Label row="1" col="1" colSpan="2" text="{{ ev(lostObjectWrapper).name }}" textWrap="true" class="lo-item-name"></Label>
+                    <Image row="0" rowSpan="2" col="0" async="true" height="50" width="60" src="{{ getPrimaryPhotoUrl(lostObject) }}"></Image>
+                    <ActivityIndicator [busy]="lostObject.photoUrl == null" row="0" rowSpan="2" col="0" height="50" width="60"></ActivityIndicator>
+                    <Label row="0" col="1" text="{{ 'com.recuperalo.mobile.lost-object.found-by' | L }} {{ lostObject.username }}" class="lo-item-username"></Label>
+                    <Label row="0" col="2" text="{{ toDate(lostObject.publishTimestamp) | date:'short' }}" class="lo-item-date"></Label>
+                    <Label row="1" col="1" colSpan="2" text="{{ lostObject.name }}" textWrap="true" class="lo-item-name"></Label>
                 </GridLayout>
             </ng-template>
         </ListView>

@@ -6,11 +6,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { registerElement } from "nativescript-angular/element-registry";
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
-import { LoginService } from '~/app/shared/login.service';
 import { LostObject } from '~/app/shared/lost-object';
 import { MapView } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
+import { UUIDUtils } from '../shared/uuid-utils';
+import { Image } from '../shared/image';
 
 var fs = require("tns-core-modules/file-system");
 var imagepicker = require("nativescript-imagepicker");
@@ -24,7 +25,9 @@ registerElement("MapView", () => require("nativescript-google-maps-sdk").MapView
 })
 export class LostObjectCreateComponent implements OnInit {
 
-    private lostObjectImageUrl: string;
+    private images: Array<Image>;
+
+    private maxOrdinal: number = 0;
 
     private lostObjectCreateForm: FormGroup;
 
@@ -39,7 +42,6 @@ export class LostObjectCreateComponent implements OnInit {
         private route: ActivatedRoute, 
         private formBuilder: FormBuilder,
         private homeActivityIndicatorService: HomeActivityIndicatorService,
-        private loginService: LoginService,
         private routeUtils: RouteUtilsService) { }
 
     ngOnInit(): void {
@@ -47,8 +49,8 @@ export class LostObjectCreateComponent implements OnInit {
             .data
             .subscribe((data: { noPhotoUrl: string; 
                     appUser: AppUser }) => {
-                this.lostObjectImageUrl = data.noPhotoUrl;
-                this.appUser = data.appUser[Object.keys(data.appUser)[0]];
+                this.appUser = data.appUser;
+                this.images = [{ url: data.noPhotoUrl } as Image];
             });
 
         this.lostObjectCreateForm = this.formBuilder.group({
@@ -66,11 +68,19 @@ export class LostObjectCreateComponent implements OnInit {
         ).then(selection => {
             selection.forEach(selected => {
             console.log("about to upload the lost object image");
-            this.lostObjectService.uploadImage(selected, this.loginService.getCurrentUid() + "-" + this.publishTimestamp)
-                .then(remoteUrl => this.lostObjectImageUrl = remoteUrl);
-            })
+            let uuid = UUIDUtils.uuidv4();
+            this.lostObjectService.uploadImage(selected, uuid)
+                .then(remoteUrl => this.images.push(this.populateImage(uuid, remoteUrl)));
+            });
         });
-        
+    }
+
+    private populateImage(uuid: string, url: string) {
+        let image: Image = {} as Image;
+        image.uuid = uuid;
+        image.url = url;
+        image.ordinal = this.maxOrdinal++;
+        return image;
     }
 
     public onMapReady = (event) => {
@@ -86,13 +96,14 @@ export class LostObjectCreateComponent implements OnInit {
 
     private populateLostObject(): LostObject {
         let lostObject: LostObject = {} as LostObject;
-        lostObject.createdBy = this.loginService.getCurrentUid();
+        lostObject.createdById = this.appUser.id;
         lostObject.name = this.name.value;
         lostObject.description = this.description.value;
         lostObject.publishTimestamp = this.publishTimestamp;
         lostObject.lastUpdateTimestamp = this.publishTimestamp;
         lostObject.location = [this.mapView["latitude"] , this.mapView["longitude"]];
         lostObject.username = this.appUser.username;
+        lostObject.photos = this.images;
         return lostObject;
     }
 

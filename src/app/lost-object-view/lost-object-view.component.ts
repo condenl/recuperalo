@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LostObject } from '~/app/shared/lost-object';
+import { LostObject, resolvePrimaryPhotoUrl } from '~/app/shared/lost-object';
 import { MapView } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
+import { Image } from '../shared/image';
 
 @Component({
     selector: 'ns-lost-object-view',
@@ -13,9 +14,9 @@ import { AppUser } from '~/app/shared/app-user';
 })
 export class LostObjectViewComponent implements OnInit {
 
-    private lostObjectImageUrl: string;
+    private photos: Array<Image>;
 
-    private lostObjectFirebaseKey: string;
+    private noPhotoUrl: string;
 
     private lostObject: LostObject;
 
@@ -29,18 +30,24 @@ export class LostObjectViewComponent implements OnInit {
     ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: { imageUrl: string; 
-                    appUser: AppUser;
-                    lostObject: any }) => {
-                this.lostObjectImageUrl = data.imageUrl;
-                this.lostObjectFirebaseKey = Object.keys(data.lostObject)[0];
-                this.lostObject = data.lostObject[this.lostObjectFirebaseKey];
-                this.appUser = data.appUser[Object.keys(data.appUser)[0]];
+            .subscribe((data: { appUser: AppUser; lostObject: LostObject; noPhotoUrl: string; }) => {
+                this.noPhotoUrl = data.noPhotoUrl;
+                this.lostObject = data.lostObject;
+                this.appUser = data.appUser;
+                this.populatePhotos(this.lostObject);
             });
     }
 
+    populatePhotos(lostObject: LostObject) {
+        let result: Array<Image> = [{ url: this.noPhotoUrl } as Image];
+        if (lostObject.photos && lostObject.photos.length > 0) {
+            result = lostObject.photos
+        }
+        this.photos = result;
+    }
+
     public contact() {
-        this.routeUtils.routeTo("/chat/" + this.lostObjectFirebaseKey);
+        this.routeUtils.routeTo("/chat/" + this.lostObject.id);
     }
 
     public onMapReady = (event) => {
@@ -48,7 +55,7 @@ export class LostObjectViewComponent implements OnInit {
     }
 
     public isCurrentUserOwner(): boolean {
-        return this.lostObject.createdBy == this.appUser.userId;
+        return this.lostObject.createdById == this.appUser.id;
     }
 
 }

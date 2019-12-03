@@ -46,10 +46,13 @@ export class ChatComponent implements OnInit {
     this.route
       .data
       .subscribe((data) => {
-          this.currentUser = data.appUser[Object.keys(data.appUser)[0]] as AppUser;
-          this.chat = data.chat[Object.keys(data.chat)[0]] as Chat;
-          this.lostObject = data.lostObject[Object.keys(data.lostObject)[0]] as LostObject;
-          this.messages$ = <any>this.chatService.getMessages(this.itemId, this.currentUser.userId);
+          this.currentUser = data.appUser;
+          this.chat = data.chat;
+          this.lostObject = data.lostObject;
+          if (!this.lostObject.createdByAppUser.profilePhotoUrl) {
+            this.lostObject.createdByAppUser.profilePhotoUrl = data.defaultProfilePhotoUrl;
+          }
+          this.messages$ = <any>this.chatService.getMessages(this.itemId, this.currentUser.id);
         }
       );
   }
@@ -68,9 +71,9 @@ export class ChatComponent implements OnInit {
   sendMessage(toId: string, message: string) {
     let promise = Promise.resolve();
     if (!this.chat) {
-        promise = this.chatService.chat(this.itemId, [this.currentUser.userId, this.lostObject.createdBy]);
+        promise = this.chatService.chat(this.itemId, [this.currentUser.id, this.lostObject.createdById]);
     }
-    promise.then(this.chatService.sendMessage(this.itemId, this.currentUser.userId, this.lostObject.createdBy, message)).then((data: any) => {
+    promise.then(this.chatService.sendMessage(this.itemId, this.currentUser.id, this.lostObject.createdById, message)).then((data: any) => {
       this.scroll(this.list.items.length);
     });
     this.textfield.text = '';

@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { NativeScriptLocalizeModule } from "nativescript-localize/angular";
 
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
+import { CarouselDirective } from "nativescript-ng2-carousel-swipeable";
 
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "~/app/login/login.component";
@@ -44,7 +45,8 @@ import { ChatComponent } from "./chat/chat.component";
         LostObjectEditComponent,
         LostObjectViewComponent,
         ChatListComponent,
-        ChatComponent
+        ChatComponent,
+        CarouselDirective
     ],
     providers: [
         ModalDialogService

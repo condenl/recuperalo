@@ -30,56 +30,54 @@ export class LostObjectService {
         return firebase.getValue("/lostObject")
             .then(results =>
                 of(results)
-                .pipe(map(result => result["value"]))
+                .pipe(map(result => this.mapFbResultSetToLostObjects(result["value"])))
                 .toPromise()
             );
     }
 
-    /**
-     * Gives default image if uid-tied image not found
-     */
-    public getImage(path: string): Promise<string> {
-        return this.imageService.remoteUrl("lost-object/" + path + ".png")
-            .then(url => url, err => this.getDefaultLostObjectImage());
+    mapFbResultSetToLostObjects(fbResult) {
+        let lostObjects = [];
+        if(fbResult) {
+            for (let idx in fbResult) {
+                lostObjects.push((<any>Object).assign({id: idx}, fbResult[idx]) as LostObject)
+            }
+        }
+        return lostObjects;
     }
 
-    public findAllByUid(uid: string): Promise<any> {
+    public findAllById(id: string): Promise<any> {
         return firebase.query(function(result) { },
         "/lostObject",
         {
             singleEvent: true,
             orderBy: {
                 type: firebase.QueryOrderByType.CHILD,
-                value: 'createdBy'
+                value: 'createdById'
             },
             range: {
                 type: firebase.QueryRangeType.EQUAL_TO,
-                value: uid
+                value: id
             }
         }).then(
             results => of(results)
-                .pipe(map(result => result["value"]))
+                .pipe(map(result => this.mapFbResultSetToLostObjects(result["value"])))
                 .toPromise()
         );
     }
 
-    public update(lostObject: LostObject, firebaseKey: string) {
-        console.log("updating firebase key in lost-object service: ", firebaseKey);
-        return firebase.setValue("/lostObject/" + firebaseKey, lostObject);
+    public update(lostObject: LostObject, id: string) {
+        console.log("updating firebase key in lost-object service: ", id);
+        return firebase.setValue("/lostObject/" + id, lostObject);
     }
 
-    public delete(firebaseKey: string): Promise<any> {
-        console.log("removing firebase key in lost-object service: ", firebaseKey);
-        return firebase.remove("/lostObject/" + firebaseKey);
+    public delete(id: string): Promise<any> {
+        console.log("removing firebase key in lost-object service: ", id);
+        return firebase.remove("/lostObject/" + id);
     }
 
-    public findByFirebaseKey(key: string): Promise<any> {
+    public findById(key: string): Promise<any> {
         return firebase.getValue("/lostObject/" + key)
-            .then(result => {
-                let obj = {};
-                obj[result.key] = result.value;
-                return obj;
-            });
+            .then(result => (<any>Object).assign({id: result.key}, result.value) as LostObject);
     }
 
 }

@@ -11,9 +11,9 @@ export class ChatResolver implements Resolve<Promise<any>> {
 
     constructor(private loginService: LoginService, private chatService: ChatService) { }
 
-    public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<{ [key: string]: Chat; }> {
+    public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Chat> {
         console.log("resolving chat");
-        return this.chatService.findById(route.params['itemId'], this.loginService.getCurrentUid());
+        return this.chatService.findById(route.params['itemId'], this.loginService.getCurrentId());
     }
 
 }

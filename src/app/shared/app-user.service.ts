@@ -12,29 +12,41 @@ export class AppUserService {
 
     constructor(private imageService: ImageService) { }
 
-    public findById(uid: string): Promise<{ [key: string]: AppUser; }> {
+    public findByUid(uid: string) {
         return firebase.query(function(result) {
+            if (result.error)
+                console.log("Error retrieving app-user by key: " + result.key);
+        },
+        "/appUser",
+        {
+            singleEvent: true,
+            orderBy: {
+                type: firebase.QueryOrderByType.CHILD,
+                value: 'uid'
+            },
+            range: {
+                type: firebase.QueryRangeType.EQUAL_TO,
+                value: uid
+            }
+        }
+        ).then(result => this.mapFbResultSetToAppUser(result.value));
+    }
+
+    public findById(id: string): Promise<AppUser> {
+        return firebase.query(
+            function(result) {
                 if (result.error)
                     console.log("Error retrieving app-user by key: " + result.key);
             },
-            "/appUser",
-            {
-                singleEvent: true,
-                orderBy: {
-                    type: firebase.QueryOrderByType.CHILD,
-                    value: 'userId'
-                },
-                range: {
-                    type: firebase.QueryRangeType.EQUAL_TO,
-                    value: uid
-                }
-            }
-        ).then(
-            result => result.value
-        );
+            "/appUser/" + id, { singleEvent: true }
+        ).then(result => this.mapFbResultSetToAppUser(result.value));
     }
 
-    public isUsernameTaken(username: string, uid: string): Promise<boolean> {
+    private mapFbResultSetToAppUser(fbResult): AppUser {
+        return (<any>Object).assign({id: Object.keys(fbResult)[0]}, fbResult[Object.keys(fbResult)[0]]) as AppUser;
+    }
+
+    public isUsernameTaken(username: string, id: string): Promise<boolean> {
         return firebase.query(function(result) {
                 if (!result.error) {
                     console.log("Event type: " + result.type);
@@ -55,7 +67,7 @@ export class AppUserService {
                 }
             }
         ).then(
-            result => result.value != null && result.value[Object.keys(result.value)[0]].userId != uid
+            result => result.value != null && Object.keys(result.value)[0] != id
         );
     }
 
@@ -66,49 +78,22 @@ export class AppUserService {
         );
     }
 
-    /**
-     * Gives default image if neither uid-tied image nor social media image is found
-     */
-    public getProfileImage(uid: string): Promise<string> {
-        return this.imageService.remoteUrl("profile/" + uid + ".png")
-            .catch(error => {
-                return this.findById(uid).then(
-                    result => {
-                        let url: string = this.getSocialMediaProfileImage(result[Object.keys(result)[0]]);
-                        if (url != null) {
-                            return url;
-                        }
-                        return this.getDefaultProfileImage();
-                    }
-                )
-            });
-    }
-
-    private getSocialMediaProfileImage(appUser: AppUser): string {
-        let url: string = null;
-        console.log("getSocialMediaProfileImage", appUser.userId);
-        if (appUser.profileImageUrl != null) {
-            url = appUser.profileImageUrl;
-        }
-        return url;
-    }
-
-    public getDefaultProfileImage(): Promise<string> {
-        console.log("getting default profile image");
+    public getDefaultProfilePhoto(): Promise<string> {
+        console.log("getting default profile photo");
         return this.imageService.remoteUrl("profile/default-profile.png");
     }
 
-    public uploadProfileImage(image: any, uid: string): Promise<string> {
-        return this.imageService.uploadImage(image, 'profile/' + uid + '.png');
+    public uploadProfilePhoto(image: any, id: string): Promise<string> {
+        return this.imageService.uploadImage(image, 'profile/' + id + '.png');
     }
 
     public create(appUser: AppUser): Promise<any> {
         return firebase.push("/appUser", appUser);
     }
 
-    public update(appUser: AppUser, firebaseKey: string): Promise<any> {
-        console.log("firebase key in app-user service: ", firebaseKey);
-        return firebase.setValue("/appUser/" + firebaseKey, appUser);
+    public update(appUser: AppUser, id: string): Promise<any> {
+        console.log("firebase key in app-user service: ", id);
+        return firebase.setValue("/appUser/" + id, appUser);
     }
 
 }

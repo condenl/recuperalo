@@ -28,9 +28,9 @@ export class ChatListComponent implements OnInit {
   ngOnInit(): void {
     this.route
         .data
-        .subscribe((data: { appUser: AppUser }) => {
-            this.appUser = data.appUser[Object.keys(data.appUser)[0]];
-            this.chats$ = <any>this.chatService.getChats(this.appUser.userId);
+        .subscribe((data: { appUser: AppUser; defaultProfilePhotoUrl: string }) => {
+            this.appUser = data.appUser;
+            this.chats$ = <any>this.chatService.getChats(this.appUser.id, data.defaultProfilePhotoUrl);
         });
     this.hasContent = false;
     this.homeActivityIndicatorService.notBusy();
