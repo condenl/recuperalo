@@ -1,7 +1,6 @@
 {
     "app.name": "Get it Back",
     "com.recuperalo.mobile.alert": "Alert",
-    "com.recuperalo.mobile.apply": "Apply",
     "com.recuperalo.mobile.required.username": "You should have a username",
     "com.recuperalo.mobile.continue": "Continue",
     "com.recuperalo.mobile.required-field": "Required field.",

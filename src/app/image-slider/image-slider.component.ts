@@ -34,8 +34,10 @@ export class ImageSliderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.swipeFnHolder.fn = this.onSwipe;
-    this.swipeFnHolder.applyOn = this;
+    if(this.swipeFnHolder) {
+      this.swipeFnHolder.fn = this.onSwipe;
+      this.swipeFnHolder.applyOn = this;
+    }
   }
 
   onSwipe(args: SwipeGestureEventData) {

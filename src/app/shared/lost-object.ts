@@ -26,10 +26,10 @@ export interface LostObject {
 
 }
 
-export function resolvePrimaryPhotoUrl(lostObject: LostObject, noPhotoUrl: string): string {
-    let photoUrl: string = noPhotoUrl;
+export function resolvePrimaryPhoto(lostObject: LostObject, noPhotoUrl: string): Image {
+    let photo: Image = {url: noPhotoUrl} as Image;
     if (lostObject.photos && lostObject.photos.length > 0) {
-        photoUrl = lostObject.photos[0].url;
+        photo = lostObject.photos[0];
     }
-    return photoUrl;
+    return photo;
 }

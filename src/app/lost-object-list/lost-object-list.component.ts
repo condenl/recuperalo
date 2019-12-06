@@ -2,13 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AdService } from '~/app/shared/ad.service';
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
-import { LostObject, resolvePrimaryPhotoUrl } from '~/app/shared/lost-object';
+import { LostObject, resolvePrimaryPhoto } from '~/app/shared/lost-object';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { DateUtils } from '~/app/shared/date-utils';
 import { SearchBar } from "tns-core-modules/ui/search-bar";
-
-const imageSourceModule = require("tns-core-modules/image-source");
-const fileSystemModule = require("tns-core-modules/file-system");
+import { Image } from '../shared/image';
 
 @Component({
     selector: 'ns-lost-object-list',
@@ -54,8 +52,8 @@ export class LostObjectListComponent implements OnInit {
         return DateUtils.toDate(ts);
     }
 
-    public getPrimaryPhotoUrl(lostObject: LostObject): string {
-        return resolvePrimaryPhotoUrl(lostObject, this.noPhotoUrl);
+    public getPrimaryPhoto(lostObject: LostObject): Image {
+        return resolvePrimaryPhoto(lostObject, this.noPhotoUrl);
     }
 
     public onTextChanged(args) {

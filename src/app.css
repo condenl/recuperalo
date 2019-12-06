@@ -43,7 +43,7 @@ refer to http://docs.nativescript.org/ui/theme.
     padding-right: 10;
 }
 
-.action-button{
+.action-button {
     font-size: 20;
 }
 
@@ -182,4 +182,15 @@ SearchBar {
 
 .height-130 {
     height: 130;
+}
+
+.darken {
+    filter: brightness(50%);
+}
+
+.camera-button {
+    font-size: 40;
+    horizontal-align: center;
+    vertical-align: center;
+    color: #30BCFF;
 }

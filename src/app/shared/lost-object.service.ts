@@ -15,10 +15,6 @@ export class LostObjectService {
 
     constructor(private imageService: ImageService) { }
 
-    public create(lostObject: LostObject): Promise<any> {
-        return firebase.push("/lostObject", lostObject);
-    }
-
     public getDefaultLostObjectImage(): Promise<string> {
         return this.imageService.remoteUrl("lost-object/insert-image.png");
     }
@@ -34,16 +30,6 @@ export class LostObjectService {
                 .pipe(map(result => this.mapFbResultSetToLostObjects(result["value"])))
                 .toPromise()
             );
-    }
-
-    mapFbResultSetToLostObjects(fbResult) {
-        let lostObjects = [];
-        if(fbResult) {
-            for (let idx in fbResult) {
-                lostObjects.push((<any>Object).assign({id: idx}, fbResult[idx]) as LostObject)
-            }
-        }
-        return lostObjects;
     }
 
     public findAllById(id: string): Promise<any> {
@@ -66,9 +52,33 @@ export class LostObjectService {
         );
     }
 
+    mapFbResultSetToLostObjects(fbResult) {
+        let lostObjects = [] as Array<LostObject>;
+        if(fbResult) {
+            for (let idx in fbResult) {
+                lostObjects.push(this.normalize((<any>Object).assign({id: idx}, fbResult[idx]) as LostObject))
+            }
+        }
+        lostObjects.sort((a, b) => a.publishTimestamp > b.publishTimestamp ? 1 : (a.publishTimestamp < b.publishTimestamp ? -1 : 0));
+        return lostObjects;
+    }
+
+    public create(lostObject: LostObject): Promise<any> {
+        this.updateOrdinals(lostObject);
+        return firebase.push("/lostObject", lostObject);
+    }
+
     public update(lostObject: LostObject, id: string) {
-        console.log("updating firebase key in lost-object service: ", id);
+        this.updateOrdinals(lostObject);
         return firebase.setValue("/lostObject/" + id, lostObject);
+    }
+
+    private updateOrdinals(lostObject: LostObject): void {
+        if (lostObject.photos) {
+            for (let i = 0; i < lostObject.photos.length; i++) {
+                lostObject.photos[i].ordinal = i;
+            }
+        }
     }
 
     public delete(id: string): Promise<any> {

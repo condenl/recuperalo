@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LostObject, resolvePrimaryPhotoUrl } from '~/app/shared/lost-object';
+import { LostObject } from '~/app/shared/lost-object';
 import { MapView } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { Image } from '../shared/image';
+import { localize } from "nativescript-localize";
+
+var Toast = require("nativescript-toast");
 
 @Component({
     selector: 'ns-lost-object-view',
@@ -47,6 +50,10 @@ export class LostObjectViewComponent implements OnInit {
     }
 
     public contact() {
+        if (!this.appUser.username) {
+            Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+            return;
+        }
         this.routeUtils.routeTo("/chat/" + this.lostObject.id);
     }
 

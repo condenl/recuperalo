@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
 import { LostObject } from '~/app/shared/lost-object';
-import { MapView } from 'nativescript-google-maps-sdk';
+import { MapView, Marker, Position } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { UUIDUtils } from '../shared/uuid-utils';
@@ -13,7 +13,6 @@ import { ModalService } from '../shared/modal.service';
 import { ImageReorderComponent } from '../image-reorder/image-reorder.component';
 import { ImageService } from '../shared/image.service';
 import { localize } from "nativescript-localize";
-import { getViewById, Page, EventData } from 'tns-core-modules/ui/page/page';
 import { SwipeDirection, SwipeGestureEventData } from 'tns-core-modules/ui/gestures/gestures';
 
 var Toast = require("nativescript-toast");
@@ -28,15 +27,11 @@ export class LostObjectCreateComponent implements OnInit {
 
     private images: Array<Image>;
 
-    private maxOrdinal: number = 0;
-
     private lostObjectCreateForm: FormGroup;
 
     private mapView: MapView;
 
     private appUser: AppUser;
-
-    private publishTimestamp: number;
 
     private noPhotos: boolean = true;
 
@@ -71,7 +66,6 @@ export class LostObjectCreateComponent implements OnInit {
             name: ['', Validators.required],
             description: ['', Validators.required]
         });
-        this.publishTimestamp = new Date().getTime();
         this.homeActivityIndicatorService.notBusy();
     }
 
@@ -96,6 +90,7 @@ export class LostObjectCreateComponent implements OnInit {
     public removePhoto() {
         if (this.noPhotos) {
             Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+            return;
         }
         for (let i = 0; i < this.images.length; i++) {
             if (this.images[i].uuid == this.currentPhotoUid) {
@@ -118,12 +113,35 @@ export class LostObjectCreateComponent implements OnInit {
         let image: Image = {} as Image;
         image.uuid = uuid;
         image.url = url;
-        image.ordinal = this.maxOrdinal++;
         return image;
+    }
+    
+    public reorderPhotos() {
+        if (!this.images || this.images.length == 0 || this.noPhotos) {
+            Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+        }
+        this.modalService.show(ImageReorderComponent, this.viewContainerRef, this.images, false);
     }
 
     public onMapReady = (event) => {
         this.mapView = event.object;
+        this.mapView.settings.compassEnabled = true;
+        this.mapView.settings.indoorLevelPickerEnabled = true;
+        this.mapView.settings.mapToolbarEnabled = true;
+        this.mapView.settings.myLocationButtonEnabled = true;
+        this.mapView.settings.rotateGesturesEnabled = true;
+        this.mapView.settings.scrollGesturesEnabled = true;
+        this.mapView.settings.tiltGesturesEnabled = true;
+        this.mapView.settings.zoomControlsEnabled = true;
+        this.mapView.settings.zoomGesturesEnabled = true;
+
+        console.log("Setting a marker...");
+        var marker = new Marker();
+        marker.position = Position.positionFromLatLng(-33.86, 151.20);
+        marker.title = "Sydney";
+        marker.snippet = "Australia";
+        marker.userData = {index: 1};
+        this.mapView.addMarker(marker);
     };
 
     public createLostObject() {
@@ -132,23 +150,17 @@ export class LostObjectCreateComponent implements OnInit {
     }
 
     private populateLostObject(): LostObject {
+        let currentDateTime = new Date().getTime();
         let lostObject: LostObject = {} as LostObject;
         lostObject.createdById = this.appUser.id;
         lostObject.name = this.name.value;
         lostObject.description = this.description.value;
-        lostObject.publishTimestamp = this.publishTimestamp;
-        lostObject.lastUpdateTimestamp = this.publishTimestamp;
+        lostObject.publishTimestamp = currentDateTime;
+        lostObject.lastUpdateTimestamp = currentDateTime;
         lostObject.location = [this.mapView["latitude"] , this.mapView["longitude"]];
         lostObject.username = this.appUser.username;
         lostObject.photos = this.images;
         return lostObject;
-    }
-
-    public reorderPhotos() {
-        if (this.images && this.images.length > 0) {
-            this.modalService.show(ImageReorderComponent, this.viewContainerRef, this.images, true)
-                .then(result => console.log("reorderPhotos", result));
-        }
     }
 
     get name() {

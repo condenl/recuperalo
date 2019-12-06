@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { NativeScriptLocalizeModule } from "nativescript-localize/angular";
 
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
+import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "~/app/login/login.component";
@@ -34,7 +35,8 @@ import { ModalSingleImageComponent } from "./modal-single-image/modal-single-ima
         AppRoutingModule,
         NativeScriptFormsModule,
         ReactiveFormsModule,
-        NativeScriptLocalizeModule
+        NativeScriptLocalizeModule,
+        NativeScriptUIListViewModule
     ],
     declarations: [
         AppComponent,

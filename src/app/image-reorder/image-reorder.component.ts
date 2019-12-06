@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
+import { Image } from '../shared/image';
 
 @Component({
   selector: 'ns-image-reorder',
@@ -8,19 +9,17 @@ import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 })
 export class ImageReorderComponent implements OnInit {
 
+  private images: Array<Image>;
+
   constructor(private params: ModalDialogParams) {
     console.log("ImageReorderComponent constructor: ", params.context);
+    this.images = params.context;
   }
 
   ngOnInit() {
   }
 
-  public saveOrder() {
-    console.log("saveOrder executed");
-    this.params.closeCallback();
-  }
-
-  public cancel() {
+  public close() {
       this.params.closeCallback();
   }
 

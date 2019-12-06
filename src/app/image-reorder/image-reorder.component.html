@@ -1,20 +1,18 @@
-<ActionBar class="action-bar" title="{{ 'com.recuperalo.mobile.profile.your-profile' | L }}">
-    <StackLayout *ngIf="editMode" orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
-        <Label text="{{ 'com.recuperalo.mobile.cancel' | L }}" class="m-r-10" (tap)="cancel()"></Label>
-        <Label text="{{ 'com.recuperalo.mobile.apply' | L }}" (tap)="saveOrder()"></Label>
-    </StackLayout>
-</ActionBar>
+<StackLayout>
+    <RadListView [items]="images" height="80%" width="90%" row="1" itemReorder="true" reorderMode="Drag">
+        <ng-template tkListItemTemplate let-item="item">
+            <GridLayout columns="*, auto" class="m-b-10" paddingTop="16" paddingBottom="16">
+                <StackLayout orientation="vertical" col="0" verticalAlignment="center">
+                    <Image [src]="item.url" height="100" width="60%"></Image>
+                </StackLayout>
+                <ReorderHandle col="1" verticalAlignment="center">
+                    <Label class="fa action-button" text="&#xf0dc;" margin="16"></Label>
+                </ReorderHandle>
+            </GridLayout>
+        </ng-template>
+    </RadListView>
 
-<!-- itemReordered="{{onItemReordered}}" -->
-<lv:RadListView  items="{{ dataItems }}" row="1" itemReorder="true">
-    <lv:RadListView.itemTemplate>
-        <GridLayout columns="*, auto" paddingTop="16" paddingBottom="16">
-            <StackLayout orientation="vertical" col="0" verticalAlignment="center">
-                <Image android:src="res://reorder_icon" height="100" width="40%" ios:src="res://reorder-icon" stretch="none"
-                    verticalAlignment="stretch" />
-            </StackLayout>
-            <!-- <lv:ReorderHandle col="1" verticalAlignment="center">
-            </lv:ReorderHandle> -->
-        </GridLayout>
-    </lv:RadListView.itemTemplate>
-</lv:RadListView>
+    <StackLayout orientation="horizontal" horizontalAlignment="center">
+        <Label text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="close()"></Label>
+    </StackLayout>
+</StackLayout>
