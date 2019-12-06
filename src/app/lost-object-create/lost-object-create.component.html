@@ -1,7 +1,12 @@
 <FlexboxLayout [formGroup]="lostObjectCreateForm" class="page gray-bg color-white p-t-10">
     <StackLayout class="flex-grow-1">
-        <GridLayout class="lost-object-picture" [carousel]="images" carouselLabelOverlay="false" carouselSpeed="2000"></GridLayout>
-        <Button class="btn btn-outline normal-font-size" text="{{ 'com.recuperalo.mobile.upload-image' | L }}" width="40%" (tap)="choosePicture()"></Button>
+        <!--<GridLayout class="height-130" rows="1" columns="*">-->
+            <ns-image-slider class="lost-object-picture" [images]="images" [swipeFnHolder]="swipeFnHolder" (onSlide)="currentPhoto($event)"></ns-image-slider>
+            <!-- <ActivityIndicator [busy]="updatingSlider" height="50" width="60"></ActivityIndicator> -->
+        <!-- </GridLayout> -->
+        <Button class="btn btn-outline normal-font-size" text="{{ 'com.recuperalo.mobile.upload-photo' | L }}" width="40%" (tap)="choosePhoto()"></Button>
+        <Button class="btn btn-outline normal-font-size" text="{{ 'com.recuperalo.mobile.reorder-photos' | L }}" width="40%" (tap)="reorderPhotos()"></Button>
+        <Button class="btn btn-outline normal-font-size" text="{{ 'com.recuperalo.mobile.remove-photo' | L }}" width="40%" (tap)="removePhoto()"></Button>
         <TextField hint="{{ 'com.recuperalo.mobile.lost-object.name' | L }}" 
             class="input text-center normal-font-size {{ !name.valid ? 'input-error-outline' : '' }}" 
             maxLength="15" width="50%" formControlName="name"></TextField>

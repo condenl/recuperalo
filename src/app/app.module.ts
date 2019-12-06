@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { NativeScriptLocalizeModule } from "nativescript-localize/angular";
 
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
-import { CarouselDirective } from "nativescript-ng2-carousel-swipeable";
 
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "~/app/login/login.component";
@@ -19,6 +18,9 @@ import { LostObjectEditComponent } from "~/app/lost-object-edit/lost-object-edit
 import { LostObjectViewComponent } from "~/app/lost-object-view/lost-object-view.component";
 import { ChatListComponent } from "./chat-list/chat-list.component";
 import { ChatComponent } from "./chat/chat.component";
+import { ImageSliderComponent } from "./image-slider/image-slider.component";
+import { ImageReorderComponent } from "./image-reorder/image-reorder.component";
+import { ModalSingleImageComponent } from "./modal-single-image/modal-single-image.component";
 
 // Uncomment and add to NgModule imports if you need to use the HttpClient wrapper
 // import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
@@ -46,7 +48,9 @@ import { ChatComponent } from "./chat/chat.component";
         LostObjectViewComponent,
         ChatListComponent,
         ChatComponent,
-        CarouselDirective
+        ImageSliderComponent,
+        ImageReorderComponent,
+        ModalSingleImageComponent
     ],
     providers: [
         ModalDialogService
@@ -54,7 +58,7 @@ import { ChatComponent } from "./chat/chat.component";
     schemas: [
         NO_ERRORS_SCHEMA
     ],
-    entryComponents: [ DatePickerModalComponent ]
+    entryComponents: [ DatePickerModalComponent, ModalSingleImageComponent ]
 })
 /*
 Pass your application module to the bootstrapModule function located in main.ts to start your app

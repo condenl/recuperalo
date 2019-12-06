@@ -29,7 +29,7 @@ export class AppUserService {
                 value: uid
             }
         }
-        ).then(result => this.mapFbResultSetToAppUser(result.value));
+        ).then(result => this.mapFbResultSetToAppUser(Object.keys(result.value)[0], result.value[Object.keys(result.value)[0]]));
     }
 
     public findById(id: string): Promise<AppUser> {
@@ -38,12 +38,19 @@ export class AppUserService {
                 if (result.error)
                     console.log("Error retrieving app-user by key: " + result.key);
             },
-            "/appUser/" + id, { singleEvent: true }
-        ).then(result => this.mapFbResultSetToAppUser(result.value));
+            "/appUser/" + id,
+            {
+                singleEvent: true,
+                orderBy: {
+                    type: firebase.QueryOrderByType.KEY
+                }
+            }
+        ).then(result => this.mapFbResultSetToAppUser(id, result.value));
     }
 
-    private mapFbResultSetToAppUser(fbResult): AppUser {
-        return (<any>Object).assign({id: Object.keys(fbResult)[0]}, fbResult[Object.keys(fbResult)[0]]) as AppUser;
+    private mapFbResultSetToAppUser(id: string, fbResult: any): AppUser {
+        console.log("mapFbResultSetToAppUser", fbResult);
+        return !fbResult ? null : (<any>Object).assign({id: id}, fbResult) as AppUser;
     }
 
     public isUsernameTaken(username: string, id: string): Promise<boolean> {
@@ -67,7 +74,10 @@ export class AppUserService {
                 }
             }
         ).then(
-            result => result.value != null && Object.keys(result.value)[0] != id
+            result =>{
+                console.log("isUsernameTaken " + username, result.value);
+                return Object.keys(result.value)[0] && Object.keys(result.value)[0] != id;
+            }
         );
     }
 

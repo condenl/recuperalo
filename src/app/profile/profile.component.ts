@@ -1,24 +1,21 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { LoginService } from '~/app/shared/login.service';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { RouteFragment } from '~/app/route/route-fragment.enum';
-import { ImageService } from '~/app/shared/image.service';
 import { LoaderUtilsService } from '~/app/shared/loader-utils.service';
 import { PageRoute } from 'nativescript-angular/router';
 import { switchMap } from "rxjs/operators";
-import { EventData } from 'tns-core-modules/ui/page/page';
 import { AppUser } from '~/app/shared/app-user';
 import { AppUserService } from '~/app/shared/app-user.service';
-import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { uniqueUsernameValidator } from '~/app/shared/unique-username-validator';
-import { DatePicker } from 'tns-core-modules/ui/date-picker/date-picker';
-import { ModalDialogOptions, ModalDialogService } from 'nativescript-angular/modal-dialog';
 import { DatePickerModalComponent } from '~/app/datepicker-modal/datepicker-modal.component';
 import { DateUtils } from '~/app/shared/date-utils';
 import { localize } from "nativescript-localize";
+import { ModalService } from '../shared/modal.service';
+import { ImageService } from '../shared/image.service';
 
 var dialogs = require("tns-core-modules/ui/dialogs");
-var imagepicker = require("nativescript-imagepicker");
 
 @Component({
   selector: 'ns-profile',
@@ -55,15 +52,15 @@ export class ProfileComponent implements OnInit {
   constructor(private loginService: LoginService, private appUserService: AppUserService, 
     private routeUtils: RouteUtilsService, private loaderUtils: LoaderUtilsService,
     private pageRoute: PageRoute, private formBuilder: FormBuilder,
-    private modalDialogService: ModalDialogService, private viewContainerRef: ViewContainerRef) { }
+    private modalService: ModalService, private viewContainerRef: ViewContainerRef,
+    private imageService: ImageService) { }
 
   ngOnInit() {
-    console.log("ProfileComponent ngoninit");
     this.pageRoute.activatedRoute.pipe(
       switchMap(activatedRoute => activatedRoute.data)
-    ).forEach((data) => {
-      this.appUser = data["appUser"];
-      this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : data["defaultProfilePhotoUrl"];
+    ).forEach((data: { appUser: AppUser; defaultProfilePhotoUrl: string; }) => {
+      this.appUser = data.appUser;
+      this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : data.defaultProfilePhotoUrl;
       this.profileForm = this.formBuilder.group({
         username: [this.appUser.username, Validators.required, uniqueUsernameValidator(this.appUserService, this.appUser.id)],
         name: this.appUser.name,
@@ -75,18 +72,13 @@ export class ProfileComponent implements OnInit {
     this.loaderUtils.hide();
   }
 
-  //TODO abstract
   public choosePicture(): void {
-    let context = imagepicker.create({ mode: "single" });
-    context.authorize().then(
-      () => context.present()
-    ).then(selection => {
-      selection.forEach(selected => {
-        console.log("about to upload the image");
+    this.imageService.openImagePicker().then(selection => 
+      selection.forEach(selected => 
         this.appUserService.uploadProfilePhoto(selected, this.appUser.id)
-          .then(remoteUrl => this.profilePhotoUrl = remoteUrl);
-      })
-    });
+          .then(remoteUrl => this.profilePhotoUrl = remoteUrl)
+      )
+    );
   }
 
   public saveProfile(): void {
@@ -163,12 +155,8 @@ export class ProfileComponent implements OnInit {
         displayDate = new Date();
       }
 
-      this.modalDialogService.showModal(DatePickerModalComponent, {
-        viewContainerRef: this.viewContainerRef,
-        context: displayDate.toDateString(),
-        fullscreen: false
-      } as ModalDialogOptions).then((result: Date) => {
-          console.log(result);
+      this.modalService.show(DatePickerModalComponent, this.viewContainerRef, displayDate.toDateString(), false)
+        .then((result: Date) => {
           if (result != null) {
             this.birthday = result;
           }

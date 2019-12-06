@@ -1,0 +1,7 @@
+<ContentView #slideContent>
+    <GridLayout class="height-130" rows="*" (swipe)="onSwipe($event)">
+        <Image *ngFor="let image of images; let i = index" 
+            [class]="i == 0 ? '' : 'hidden-element'" (tap)="fullscreen(image.url)"
+            width="130" height="130" [src]="image.url"></Image>
+    </GridLayout>
+</ContentView>

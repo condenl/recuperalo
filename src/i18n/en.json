@@ -1,6 +1,7 @@
 {
     "app.name": "Get it Back",
     "com.recuperalo.mobile.alert": "Alert",
+    "com.recuperalo.mobile.apply": "Apply",
     "com.recuperalo.mobile.required.username": "You should have a username",
     "com.recuperalo.mobile.continue": "Continue",
     "com.recuperalo.mobile.required-field": "Required field.",
@@ -21,6 +22,7 @@
     "com.recuperalo.mobile.contact": "Contact",
     "com.recuperalo.mobile.create": "Create",
     "com.recuperalo.mobile.upload-image": "Upload Image",
+    "com.recuperalo.mobile.upload-photo": "Upload Photo",
     "com.recuperalo.mobile.submit": "Submit",
     "com.recuperalo.mobile.profile.your-profile": "Your Profile",
     "com.recuperalo.mobile.profile.username": "Username",
@@ -42,5 +44,8 @@
     "com.recuperalo.mobile.login.successful-logout": "Successfully logged out",
     "com.recuperalo.mobile.main.home": "Home",
     "com.recuperalo.mobile.main.chats": "Chats",
-    "com.recuperalo.mobile.main.found": "Found"
+    "com.recuperalo.mobile.main.found": "Found",
+    "com.recuperalo.mobile.no-photos": "No photos yet",
+    "com.recuperalo.mobile.remove-photo": "Remove Photo",
+    "com.recuperalo.mobile.reorder-photos": "Reorder Photos"
 }

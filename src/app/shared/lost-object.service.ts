@@ -3,6 +3,7 @@ import { LostObject } from "~/app/shared/lost-object";
 import { ImageService } from "~/app/shared/image.service";
 import { Observable, of } from "rxjs";
 import { map } from "rxjs/operators";
+import { Image } from "./image";
 
 
 const firebase = require("nativescript-plugin-firebase");
@@ -77,7 +78,19 @@ export class LostObjectService {
 
     public findById(key: string): Promise<any> {
         return firebase.getValue("/lostObject/" + key)
-            .then(result => (<any>Object).assign({id: result.key}, result.value) as LostObject);
+            .then(result => this.normalize((<any>Object).assign({id: result.key}, result.value) as LostObject));
+    }
+
+    public normalize(lostObject: LostObject): LostObject {
+        lostObject.photos = this.sortPhotos(lostObject.photos);
+        return lostObject;
+    }
+
+    private sortPhotos(photos: Array<Image>): Array<Image> {
+        if (photos) {
+            photos.sort((a, b) => a.ordinal > b.ordinal ? 1 : (a.ordinal < b.ordinal ? -1 : 0));
+        }
+        return photos;
     }
 
 }

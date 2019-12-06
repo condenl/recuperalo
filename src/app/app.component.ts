@@ -1,7 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { LoginService } from "~/app/shared/login.service";
+import { registerElement } from "nativescript-angular/element-registry";
+import { Carousel, CarouselItem } from 'nativescript-carousel';
 
 const firebase = require("nativescript-plugin-firebase");
+
+registerElement('Carousel', () => Carousel);
+registerElement('CarouselItem', () => CarouselItem);
+registerElement("MapView", () => require("nativescript-google-maps-sdk").MapView);
 
 @Component({
     selector: "ns-app",

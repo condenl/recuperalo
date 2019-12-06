@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { RouteUtilsService } from '~/app/route/route-utils.service';
-import { LoaderUtilsService } from '~/app/shared/loader-utils.service';
 import { ModalDialogParams } from 'nativescript-angular/modal-dialog';
 import { DatePicker } from 'tns-core-modules/ui/date-picker/date-picker';
 

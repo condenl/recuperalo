@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { RouteUtilsService } from "~/app/route/route-utils.service";
 
 const firebase = require("nativescript-plugin-firebase");
+var imagepicker = require("nativescript-imagepicker");
 
 /**
  * Provides image handling using firebase bucket storage service
@@ -47,6 +47,13 @@ export class ImageService {
             uploadedFile => this.remoteUrl(remotePath)
         ).catch(
             error => console.log("File upload error: " + error)
+        );
+    }
+
+    public openImagePicker(): Promise<any> {
+        let context = imagepicker.create({ mode: "single" });
+        return context.authorize().then(
+          () => context.present()
         );
     }
 

@@ -1,6 +1,6 @@
 <ActionBar class="action-bar" title="{{ 'app.name' | L }}">
-    <ActionItem android.position="actionBar" ios.position="right" (tap)="routeTo('profile', 'slideTop')">
-        <Label text="&#xf2bd;" class="fa action-button"></Label>
+    <ActionItem android.position="actionBar" ios.position="right">
+        <Label text="&#xf2bd;" class="fa action-button" (tap)="routeTo('/profile')"></Label>
     </ActionItem>
 </ActionBar>
 <StackLayout>

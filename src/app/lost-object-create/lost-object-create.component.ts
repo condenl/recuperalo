@@ -1,9 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ViewChild, ElementRef } from '@angular/core';
 import { LostObjectService } from '~/app/shared/lost-object.service';
-import { switchMap } from "rxjs/operators";
-import { LoaderUtilsService } from '~/app/shared/loader-utils.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { registerElement } from "nativescript-angular/element-registry";
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
 import { LostObject } from '~/app/shared/lost-object';
@@ -12,10 +9,14 @@ import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { UUIDUtils } from '../shared/uuid-utils';
 import { Image } from '../shared/image';
+import { ModalService } from '../shared/modal.service';
+import { ImageReorderComponent } from '../image-reorder/image-reorder.component';
+import { ImageService } from '../shared/image.service';
+import { localize } from "nativescript-localize";
+import { getViewById, Page, EventData } from 'tns-core-modules/ui/page/page';
+import { SwipeDirection, SwipeGestureEventData } from 'tns-core-modules/ui/gestures/gestures';
 
-var fs = require("tns-core-modules/file-system");
-var imagepicker = require("nativescript-imagepicker");
-registerElement("MapView", () => require("nativescript-google-maps-sdk").MapView);
+var Toast = require("nativescript-toast");
 
 @Component({
     selector: 'ns-lost-object-create',
@@ -37,12 +38,24 @@ export class LostObjectCreateComponent implements OnInit {
 
     private publishTimestamp: number;
 
+    private noPhotos: boolean = true;
+
+    private defaultPhoto: Image;
+
+    private currentPhotoUid: string;
+
+    public swipeFnHolder = { fn: null, applyOn: null };
+
+    public updatingSlider: boolean = false;
+
     constructor(private lostObjectService: LostObjectService, 
-        private loaderUtils: LoaderUtilsService,
         private route: ActivatedRoute, 
         private formBuilder: FormBuilder,
         private homeActivityIndicatorService: HomeActivityIndicatorService,
-        private routeUtils: RouteUtilsService) { }
+        private routeUtils: RouteUtilsService, 
+        private viewContainerRef: ViewContainerRef,
+        private imageService: ImageService,
+        private modalService: ModalService) { }
 
     ngOnInit(): void {
         this.route
@@ -50,7 +63,8 @@ export class LostObjectCreateComponent implements OnInit {
             .subscribe((data: { noPhotoUrl: string; 
                     appUser: AppUser }) => {
                 this.appUser = data.appUser;
-                this.images = [{ url: data.noPhotoUrl } as Image];
+                this.defaultPhoto = { url: data.noPhotoUrl } as Image;
+                this.images = [this.defaultPhoto];
             });
 
         this.lostObjectCreateForm = this.formBuilder.group({
@@ -61,18 +75,43 @@ export class LostObjectCreateComponent implements OnInit {
         this.homeActivityIndicatorService.notBusy();
     }
 
-    public choosePicture(): void {
-        let context = imagepicker.create({ mode: "single" });
-        context.authorize().then(
-            () => context.present()
-        ).then(selection => {
+    public choosePhoto(): void {
+        this.imageService.openImagePicker().then(selection => 
             selection.forEach(selected => {
-            console.log("about to upload the lost object image");
-            let uuid = UUIDUtils.uuidv4();
-            this.lostObjectService.uploadImage(selected, uuid)
-                .then(remoteUrl => this.images.push(this.populateImage(uuid, remoteUrl)));
-            });
-        });
+                this.updatingSlider = true;
+                let uuid = UUIDUtils.uuidv4();
+                this.lostObjectService.uploadImage(selected, uuid)
+                    .then(remoteUrl => {
+                        if (this.noPhotos) {
+                            this.noPhotos = false;
+                            this.images.shift();
+                        }
+                        this.images.push(this.populateImage(uuid, remoteUrl));
+                        this.updatingSlider = false;
+                    });
+            })
+        );
+    }
+
+    public removePhoto() {
+        if (this.noPhotos) {
+            Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+        }
+        for (let i = 0; i < this.images.length; i++) {
+            if (this.images[i].uuid == this.currentPhotoUid) {
+                this.images.splice(i, 1);
+                this.swipeFnHolder.fn.apply(this.swipeFnHolder.applyOn, [{ direction: SwipeDirection.left } as SwipeGestureEventData]);
+                break;
+            }
+        }
+        if (!this.images || this.images.length == 0) {
+            this.images = [this.defaultPhoto];
+            this.noPhotos = true;
+        }
+    }
+
+    public currentPhoto(uid: string): void {
+        this.currentPhotoUid = uid;
     }
 
     private populateImage(uuid: string, url: string) {
@@ -89,9 +128,7 @@ export class LostObjectCreateComponent implements OnInit {
 
     public createLostObject() {
         this.lostObjectService.create(this.populateLostObject())
-            .then(() => {
-                this.routeUtils.routeTo("/home/found");
-            });
+            .then(() => this.routeUtils.routeTo("/home/found"));
     }
 
     private populateLostObject(): LostObject {
@@ -105,6 +142,13 @@ export class LostObjectCreateComponent implements OnInit {
         lostObject.username = this.appUser.username;
         lostObject.photos = this.images;
         return lostObject;
+    }
+
+    public reorderPhotos() {
+        if (this.images && this.images.length > 0) {
+            this.modalService.show(ImageReorderComponent, this.viewContainerRef, this.images, true)
+                .then(result => console.log("reorderPhotos", result));
+        }
     }
 
     get name() {

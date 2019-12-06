@@ -1,0 +1,20 @@
+<ActionBar class="action-bar" title="{{ 'com.recuperalo.mobile.profile.your-profile' | L }}">
+    <StackLayout *ngIf="editMode" orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
+        <Label text="{{ 'com.recuperalo.mobile.cancel' | L }}" class="m-r-10" (tap)="cancel()"></Label>
+        <Label text="{{ 'com.recuperalo.mobile.apply' | L }}" (tap)="saveOrder()"></Label>
+    </StackLayout>
+</ActionBar>
+
+<!-- itemReordered="{{onItemReordered}}" -->
+<lv:RadListView  items="{{ dataItems }}" row="1" itemReorder="true">
+    <lv:RadListView.itemTemplate>
+        <GridLayout columns="*, auto" paddingTop="16" paddingBottom="16">
+            <StackLayout orientation="vertical" col="0" verticalAlignment="center">
+                <Image android:src="res://reorder_icon" height="100" width="40%" ios:src="res://reorder-icon" stretch="none"
+                    verticalAlignment="stretch" />
+            </StackLayout>
+            <!-- <lv:ReorderHandle col="1" verticalAlignment="center">
+            </lv:ReorderHandle> -->
+        </GridLayout>
+    </lv:RadListView.itemTemplate>
+</lv:RadListView>

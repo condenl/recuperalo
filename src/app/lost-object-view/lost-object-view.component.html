@@ -5,7 +5,7 @@
 
 <FlexboxLayout class="page gray-bg color-white p-t-10">
     <StackLayout class="flex-grow-1">
-        <GridLayout class="lost-object-picture" [carousel]="photos" carouselLabelOverlay="false" carouselSpeed="2000"></GridLayout>
+        <ns-image-slider class="lost-object-picture" [images]="images"></ns-image-slider>
         <TextField [text]="lostObject.name" editable="false"
             class="input text-center normal-font-size" width="50%"></TextField>
         <TextView [text]="lostObject.description" editable="false"

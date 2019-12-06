@@ -1,9 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LostObjectService } from '~/app/shared/lost-object.service';
-import { switchMap } from "rxjs/operators";
 import { LoaderUtilsService } from '~/app/shared/loader-utils.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { registerElement } from "nativescript-angular/element-registry";
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
 import { LostObject } from '~/app/shared/lost-object';
@@ -12,9 +10,7 @@ import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { Image } from '../shared/image';
 import { UUIDUtils } from '../shared/uuid-utils';
-
-var fs = require("tns-core-modules/file-system");
-var imagepicker = require("nativescript-imagepicker");
+import { ImageService } from '../shared/image.service';
 
 @Component({
     selector: 'ns-lost-object-edit',
@@ -43,7 +39,8 @@ export class LostObjectEditComponent implements OnInit {
         private route: ActivatedRoute, 
         private formBuilder: FormBuilder,
         private homeActivityIndicatorService: HomeActivityIndicatorService,
-        private routeUtils: RouteUtilsService) { }
+        private routeUtils: RouteUtilsService,
+        private imageService: ImageService) { }
 
     ngOnInit(): void {
         this.route
@@ -68,28 +65,19 @@ export class LostObjectEditComponent implements OnInit {
         let result: Array<Image> = [{ url: this.noPhotoUrl } as Image];
         if (lostObject.photos && lostObject.photos.length > 0) {
             result = lostObject.photos;
-            for (let i = 0; i < lostObject.photos.length; i++) {
-                if (lostObject.photos[i].ordinal && lostObject.photos[i].ordinal > this.maxOrdinal) {
-                    this.maxOrdinal = lostObject.photos[i].ordinal;
-                }
-            }
+            this.maxOrdinal = lostObject.photos[lostObject.photos.length - 1].ordinal;
         }
         this.images = result;
     }
 
     public choosePicture(): void {
-        let context = imagepicker.create({ mode: "single" });
-        context.authorize().then(
-            () => context.present()
-        ).then(selection => {
+        this.imageService.openImagePicker().then(selection => 
             selection.forEach(selected => {
-            console.log("about to upload the lost object image");
             let uuid = UUIDUtils.uuidv4();
             this.lostObjectService.uploadImage(selected, uuid)
                 .then(remoteUrl => this.images.push(this.populateImage(uuid, remoteUrl)));
-            });
-        });
-        
+            })
+        );
     }
 
     public onMapReady = (event) => {

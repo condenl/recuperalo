@@ -20,6 +20,7 @@ import { ChatComponent } from "../chat/chat.component";
 import { ChatListComponent } from "../chat-list/chat-list.component";
 import { ChatResolver } from "./resolver/chat-resolver.service";
 import { DefaultProfilePhotoResolver } from "./resolver/default-profile-photo-resolver.service";
+import { ImageReorderComponent } from "../image-reorder/image-reorder.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
@@ -94,7 +95,8 @@ const routes: Routes = [
             chat: ChatResolver,
             lostObject: LostObjectResolver
         }
-    }
+    },
+    { path: "reorder-photos", component: ImageReorderComponent, canActivate: [ AuthGuard ] }
 ];
 
 @NgModule({

@@ -1,6 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { RouterExtensions } from "nativescript-angular/router";
-import { NgZone } from "@angular/core";
 import { Page } from "tns-core-modules/ui/page"
 import { LoginService } from "~/app/shared/login.service";
 import { LoginType } from "~/app/shared/login-type.enum";
