@@ -9,7 +9,7 @@ ListView {
     padding: 5;
 }
 
-.them .msg_text {
+.them .msg-text {
     background-color: #e0e0e0;
     color: #333;
     padding: 7;

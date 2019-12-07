@@ -2,9 +2,11 @@
     <ListView height="90%" margin-bottom="50" padding="5" #list [items]="messages$ | async">
         <ng-template let-item="item">
             <GridLayout columns="*" rows="auto" class="msg">
-                <StackLayout [class]="item.from == appUser.id ? 'me': 'them'" orientation="horizontal" [horizontalAlignment]="item.from == appUser.id ? 'right' : 'left'">
-                    <Image [visibility]="item.from == appUser.id ? 'collapsed' : 'visible'" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" src="lostObject.createdByAppUser.profilePhotoUrl" col="1"></Image>
-                    <Label [text]='item.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
+                <StackLayout [class]="item.from == currentUser.id ? 'me': 'them'" orientation="horizontal" [horizontalAlignment]="item.from == currentUser.id ? 'right' : 'left'">
+                    <Image [visibility]="item.from == currentUser.id ? 'collapsed' : 'visible'" class="authorimg" 
+                        stretch="aspectFill" height="30" width="30" verticalAlignment="top" 
+                        [src]="lostObject.createdByAppUser.profilePhotoUrl" col="1"></Image>
+                    <Label [text]='item.message' class="msg-text" textWrap="true" verticalAlignment="top"></Label>
                 </StackLayout>
             </GridLayout>
         </ng-template>

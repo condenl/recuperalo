@@ -8,7 +8,7 @@ ListView {
     padding: 5;
 }
 
-.me .msg_text {
+.me .msg-text {
     background-color: #30A9FF;
     color: white;
     padding: 8;
@@ -17,7 +17,7 @@ ListView {
     
 }
 
-.them .msg_text {
+.them .msg-text {
     background-color: #e0e0e0;
     color: #333;
     padding: 7;

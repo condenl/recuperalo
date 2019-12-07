@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { AdService } from '~/app/shared/ad.service';
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
@@ -28,6 +28,8 @@ export class LostObjectListComponent implements OnInit {
 
     public detailNavigation: boolean = false;
 
+    @ViewChild('contentView', { static: false }) contentView: ElementRef;
+
     constructor(private route: ActivatedRoute, 
         private homeActivityIndicatorService: HomeActivityIndicatorService,
         private routeUtils: RouteUtilsService,
@@ -45,7 +47,7 @@ export class LostObjectListComponent implements OnInit {
                 }
             );
         this.homeActivityIndicatorService.notBusy();
-        // this.adService.showBanner();
+        this.adService.showBanner(this.contentView);
     }
 
     public toDate(ts: number): Date {

@@ -3,7 +3,7 @@
         <SearchBar row="0" text="" hint="{{ 'com.recuperalo.mobile.search' | L }}" 
             id="search" (textChange)="onTextChanged($event)" android:loaded="doNotShowAndroidKeyboard" android:height="40"></SearchBar>
         
-        <ListView row="1" height="100%" [items]="filteredDataset" (itemTap)="onItemTap($event)" separatorColor="#00000000">
+        <ListView #contentView row="1" height="100%" [items]="filteredDataset" (itemTap)="onItemTap($event)" separatorColor="#00000000">
             <ng-template let-lostObject="item">
                 <GridLayout columns="auto, auto, *" rows="auto, auto" backgroundColor="#19FFFFFF">
                     <Image row="0" rowSpan="2" col="0" class="obj-main-photo" async="true" height="50" width="60" src="{{ getPrimaryPhoto(lostObject).url }}"></Image>

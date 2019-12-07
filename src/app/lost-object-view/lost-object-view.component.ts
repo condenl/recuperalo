@@ -51,7 +51,7 @@ export class LostObjectViewComponent implements OnInit {
 
     public contact() {
         if (!this.appUser.username) {
-            Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+            Toast.makeText(localize("com.recuperalo.mobile.required.username")).show();
             return;
         }
         this.routeUtils.routeTo("/chat/" + this.lostObject.id);

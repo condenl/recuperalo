@@ -1,14 +1,18 @@
 <GridLayout columns="*" rows="*" class="gray-bg">
     <ListView row="0" col="0" height="100%" padding="5" [items]="chats$ | async">
         <ng-template let-item="item">
-            <GridLayout columns="*" rows="auto" class="msg">
+            <GridLayout columns="*" rows="auto" class="msg" (tap)="openChat(item.lostObject.id)">
                 <StackLayout class="them" orientation="horizontal" horizontalAlignment="left">
-                    <Image class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" src="item.imageUrl" col="1"></Image>
-                    <Label [text]='chatDescription(item)' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
+                    <Image class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" 
+                    [src]="item.imageUrl" col="1"></Image>
+                    <Label [text]='chatDescription(item)' class="msg-text" textWrap="true" verticalAlignment="top"></Label>
                 </StackLayout>
             </GridLayout>
         </ng-template>
     </ListView>
     <Label row="0" col="0" *ngIf="!hasContent" class="text-center font-weight-bold color-white m-t-35" 
         text="{{ 'com.recuperalo.mobile.empty' | L }}"></Label>
+    <GridLayout row="0" col="0" *ngIf="loading" class="overlay-ro-area">
+        <ActivityIndicator busy="true" class="activity-indicator"></ActivityIndicator>
+    </GridLayout>
 </GridLayout>

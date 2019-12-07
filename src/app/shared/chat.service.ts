@@ -59,7 +59,7 @@ export class ChatService {
     let chat: Chat = null;
     let chatKeys: Array<string> = Object.keys(chats);
     for (let i = 0; i < chatKeys.length; i++) {
-      if (chats[chatKeys[i]].users && chat[chatKeys[i]].users.indexOf(userId) > -1) {
+      if (chats[chatKeys[i]].users && chats[chatKeys[i]].users.indexOf(userId) > -1) {
         chat = (<any>Object).assign({id: chatKeys[i]}, chats[chatKeys[i]]) as Chat;
       }
     }
@@ -79,23 +79,28 @@ export class ChatService {
     }).pipe(mergeMap(c => from(this.populateChat(fromId, c as Array<Chat>, defaultProfilePhotoUrl))), share());
   }
 
-  populateChat(fromId: string, chats: Array<Chat>, defaultProfilePhotoUrl: string): Promise<Chat> {
+  populateChat(fromId: string, chats: Array<Chat>, defaultProfilePhotoUrl: string): Promise<Array<Chat>> {
     console.log("populateChat from getChats", chats);
-    let chatPromise;
+    let chatsPromise;
     if (chats && chats.length > 0) {
-      let chat = chats[0];
-      let userId: string = this.getFirstFromArray(fromId, chat.users);
-      chatPromise = Promise.all([this.lostObjectService.findById(chat.itemId),
-        this.appUserService.findById(userId)])
-          .then(arr => {
-            chat.lostObject = arr[0];
-            chat.imageUrl = arr[1].profilePhotoUrl ? arr[1].profilePhotoUrl : defaultProfilePhotoUrl;
-            return chat;
-          });
+      let promises: Array<Promise<Chat>> = [];
+      for (let i = 0; i < chats.length; i++) {
+        let chat = chats[i];
+        let userId: string = this.getFirstFromArray(fromId, chat.users);
+        promises.push(Promise.all([this.lostObjectService.findById(chat.itemId),
+          this.appUserService.findById(userId)])
+            .then(arr => {
+              chat.lostObject = arr[0];
+              chat.imageUrl = arr[1].profilePhotoUrl ? arr[1].profilePhotoUrl : defaultProfilePhotoUrl;
+              console.log("populateChat from getChats done", chat);
+              return chat;
+            }));
+      }
+      chatsPromise = Promise.all(promises).then(arr => arr);
     } else {
-      chatPromise = Promise.resolve();
+      chatsPromise = Promise.resolve();
     }
-    return chatPromise as Promise<Chat>;
+    return chatsPromise as Promise<Array<Chat>>;
   }
 
   getFirstFromArray(exclude: string, arr: Array<string>): string {
@@ -134,27 +139,28 @@ export class ChatService {
     this.chats.next([...this._chats]);
   }
 
-  getMessages(itemId: any, fromId: any): Observable<any> {
+  getMessages(itemId: any, usersInvolved: Array<string>): Observable<any> {
     return new Observable((observer: any) => {
       let path = 'messages';
       
       let onValueEvent = (snapshot: any) => {
         this.ngZone.run(() => {
-          observer.next(this.handleMessageSnapshot(itemId, fromId, snapshot.value));
+          observer.next(this.handleMessageSnapshot(itemId, usersInvolved, snapshot.value));
         });
       };
       firebase.addValueEventListener(onValueEvent, `/${path}`);
     }).pipe(share());
   }
 
-  handleMessageSnapshot(itemId: any, fromId: any, data: any) {
+  handleMessageSnapshot(itemId: any, usersInvolved: Array<string>, data: any) {
     //empty array, then refill and filter
     let message: Message;
     this._messages = [];
     if (data) {
       for (let id in data) {
         message = (<any>Object).assign({id: id}, data[id]) as Message;
-        if (message.itemId == itemId && (message.from == fromId || message.to == fromId)) {
+        if (message.itemId == itemId 
+          && (usersInvolved.indexOf(message.from) > -1 && usersInvolved.indexOf(message.to) > -1)) {
           this._messages.push(message);
         }
       }

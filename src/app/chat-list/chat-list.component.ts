@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { AppUser } from '../shared/app-user';
 import { ActivatedRoute } from '@angular/router';
 import { RouteUtilsService } from '../route/route-utils.service';
 import { HomeActivityIndicatorService } from '../shared/home-activity-indicator.service';
-import { Observable } from "rxjs";
+import { Observable, NextObserver } from "rxjs";
 import { ChatService } from '../shared/chat.service';
 import { Chat } from '../shared/chat';
 
@@ -20,17 +20,22 @@ export class ChatListComponent implements OnInit {
 
   private hasContent: boolean;
 
+  private loading: boolean = true;
+
   constructor(private route: ActivatedRoute, 
     private homeActivityIndicatorService: HomeActivityIndicatorService,
     private routeUtils: RouteUtilsService,
-    private chatService: ChatService) { }
+    private chatService: ChatService, private ngZone: NgZone) { }
 
   ngOnInit(): void {
     this.route
         .data
         .subscribe((data: { appUser: AppUser; defaultProfilePhotoUrl: string }) => {
             this.appUser = data.appUser;
-            this.chats$ = <any>this.chatService.getChats(this.appUser.id, data.defaultProfilePhotoUrl);
+            this.chats$ = this.chatService.getChats(this.appUser.id, data.defaultProfilePhotoUrl);
+            this.chatService.getChats(this.appUser.id, data.defaultProfilePhotoUrl).subscribe({
+              next: n => this.ngZone.run(() => this.loading = false)
+            } as NextObserver<any>);
         });
     this.hasContent = false;
     this.homeActivityIndicatorService.notBusy();
@@ -44,7 +49,13 @@ export class ChatListComponent implements OnInit {
   }
 
   setHasContent(): void {
-    this.hasContent = true;
+    this.ngZone.run(() => {
+      this.hasContent = true;
+    });
+  }
+
+  openChat(lostObjectId: string): void {
+    this.routeUtils.routeTo("/chat/" + lostObjectId);
   }
 
 }

@@ -22,6 +22,9 @@ export class AppComponent implements OnInit {
                 if (!data.loggedIn) { // to immediately re-logon the user when his session expires
                     this.loginService.setCurrentId(null);
                 }
+            },
+            onPushTokenReceivedCallback: token => {
+                console.log("Firebase push token: " + token);
             }
         }).then(
             instance => console.log("firebase.init done"),

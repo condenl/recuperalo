@@ -15,7 +15,6 @@ import { LostObject } from '../shared/lost-object';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-
   
   @ViewChild("list", { static: false })
   private lv: ElementRef;
@@ -52,7 +51,14 @@ export class ChatComponent implements OnInit {
           if (!this.lostObject.createdByAppUser.profilePhotoUrl) {
             this.lostObject.createdByAppUser.profilePhotoUrl = data.defaultProfilePhotoUrl;
           }
-          this.messages$ = <any>this.chatService.getMessages(this.itemId, this.currentUser.id);
+          
+          let usersInvolved: Array<string>;
+          if (this.chat) {
+            usersInvolved = this.chat.users
+          } else {
+            usersInvolved = [this.currentUser.id, this.lostObject.createdById];
+          }
+          this.messages$ = <any>this.chatService.getMessages(this.itemId, usersInvolved);
         }
       );
   }
@@ -68,13 +74,13 @@ export class ChatComponent implements OnInit {
       this.list.refresh();
   }
 
-  sendMessage(toId: string, message: string) {
+  sendMessage(message: string) {
     let promise = Promise.resolve();
     if (!this.chat) {
         promise = this.chatService.chat(this.itemId, [this.currentUser.id, this.lostObject.createdById]);
     }
     promise.then(this.chatService.sendMessage(this.itemId, this.currentUser.id, this.lostObject.createdById, message)).then((data: any) => {
-      this.scroll(this.list.items.length);
+      this.scroll(this.list.items ? this.list.items.length : 0);
     });
     this.textfield.text = '';
   }
