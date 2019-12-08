@@ -64,7 +64,7 @@
             </StackLayout>
             <StackLayout class="text-center w-50 text-left p-20 title">
                 <Label text="{{ 'com.recuperalo.mobile.profile.points' | L }}" class="font-weight-bold"></Label>
-                <Label text="0"></Label>
+                <Label [text]="appUser.points ? appUser.points : '0'"></Label>
             </StackLayout>
         </StackLayout>
         <StackLayout class="w-95">

@@ -51,11 +51,7 @@ export class ChatService {
             value: itemId
           }
         }
-    ).then(
-        result => {
-          this.filterByUser(result.value, nonObjectOwnerId);
-        }
-    );
+    ).then(result => this.filterByUser(result.value, nonObjectOwnerId));
   }
   
   filterByUser(chats: any, userId: string): Chat {
@@ -188,7 +184,7 @@ export class ChatService {
   sendMessage(chatId: string, lostObject: LostObject, fromId: any, receiver: AppUser, message: string) {
     return firebase.push(
         "/messages",
-        { "message": message, "itemId": lostObject.id, "from": fromId, "to": receiver.id, "date": 0 - Date.now()}
+        { "message": message, "chatId": chatId, "itemId": lostObject.id, "from": fromId, "to": receiver.id, "date": 0 - Date.now()}
       ).then(() => {
         if (receiver.pushToken) {
           let title = receiver.username + " " + lostObject.name;

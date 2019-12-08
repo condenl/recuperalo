@@ -166,7 +166,7 @@ export class LostObjectCreateComponent implements OnInit {
             return;
         }
         this.lostObjectService.create(this.populateLostObject())
-            .then(() => this.routeUtils.routeTo("/home/found"));
+            .then(() => this.routeUtils.routeTo("/home"));
     }
 
     private populateLostObject(): LostObject {

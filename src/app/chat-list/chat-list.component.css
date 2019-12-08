@@ -24,3 +24,15 @@ ListView {
     border-radius: 15;
 }
 
+.item-name {
+    font-weight: bold;
+    font-size: 20;
+    color: white;
+}
+
+.description-text {
+    font-size: 20;
+    font-style: italic;
+    color: lightgray;
+}
+

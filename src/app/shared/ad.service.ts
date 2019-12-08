@@ -12,6 +12,10 @@ export class AdService {
 
     constructor() { }
 
+    /**
+     * Impacted by https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/630
+     * Should start working once app is in prod
+     */
     showBanner() {
         firebase.admob.showBanner({
             size: firebase.admob.AD_SIZE.SMART_BANNER,

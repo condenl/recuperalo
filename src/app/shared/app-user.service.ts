@@ -102,8 +102,6 @@ export class AppUserService {
     }
 
     public update(appUser: AppUser, id: string): Promise<any> {
-        appUser.id = null;
-        console.log("firebase key in app-user service: ", id);
         return firebase.setValue("/appUser/" + id, appUser);
     }
 

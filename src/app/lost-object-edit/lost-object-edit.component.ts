@@ -174,17 +174,17 @@ export class LostObjectEditComponent implements OnInit {
     public saveLostObject(update: boolean) {
         this.lostObjectService.update(this.populateLostObject(), this.lostObject.id)
             .then(() => {
-                this.routeUtils.routeTo("/home/found");
+                this.routeUtils.routeTo("/home");
             });
     }
 
     public cancelEditing() {
-        this.routeUtils.routeTo("/home/found");
+        this.routeUtils.routeTo("/home");
     }
 
     public deleteLostObject() {
         this.lostObjectService.delete(this.lostObject.id)
-            .then(() => this.routeUtils.routeTo("/home/found"));
+            .then(() => this.routeUtils.routeTo("/home"));
     }
 
     get name() {

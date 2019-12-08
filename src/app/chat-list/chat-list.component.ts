@@ -44,8 +44,7 @@ export class ChatListComponent implements OnInit {
   chatDescription(chat: Chat): string {
     this.setHasContent();
     let description: string = chat.lostObject.description ? chat.lostObject.description : "";
-    description = description.length > 10 ? description.substring(0, 10) + "..." : description;
-    return chat.lostObject.name + " " + description;
+    return description.length > 10 ? description.substring(0, 10) + "..." : description;
   }
 
   setHasContent(): void {

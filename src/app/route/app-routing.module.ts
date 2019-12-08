@@ -31,7 +31,8 @@ const routes: Routes = [
             component: LostObjectListComponent,
             resolve: {
                 lostObjects: LostObjectListResolver,
-                noPhotoUrl: NoPhotoResolver
+                noPhotoUrl: NoPhotoResolver,
+                appUser: AppUserResolver
             },
             data: {
                 detailUrl: "lost-object-view/"
@@ -59,7 +60,8 @@ const routes: Routes = [
             component: LostObjectListComponent,
             resolve: {
                 lostObjects: LostObjectFoundResolver,
-                noPhotoUrl: NoPhotoResolver
+                noPhotoUrl: NoPhotoResolver,
+                appUser: AppUserResolver
             },
             data: {
                 detailUrl: "lost-object-edit/"

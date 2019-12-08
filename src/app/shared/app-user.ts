@@ -20,4 +20,6 @@ export interface AppUser {
 
     pushToken: string;
     
+    points: number;
+
 }

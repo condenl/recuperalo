@@ -4,7 +4,7 @@
   <string name="_com_recuperalo_mobile_remove_photo_Z1Ue0B4">"Remover Foto"</string>
   <string name="_com_recuperalo_mobile_no_photos_WeT0D">"No hay fotos"</string>
   <string name="_com_recuperalo_mobile_missing_Z1Y9tRR">"Complete"</string>
-  <string name="_com_recuperalo_mobile_main_found_1wYmir">"Encontrado"</string>
+  <string name="_com_recuperalo_mobile_main_found_1wYmir">"Editar"</string>
   <string name="_com_recuperalo_mobile_main_chats_1wL9yW">"Chats"</string>
   <string name="_com_recuperalo_mobile_main_home_1w5IMX">"Home"</string>
   <string name="_com_recuperalo_mobile_login_successful_logout_A6FRJ">"Acaba de cerrar sesión"</string>
@@ -26,6 +26,7 @@
   <string name="_com_recuperalo_mobile_profile_username_1z7osb">"Usuario"</string>
   <string name="_com_recuperalo_mobile_profile_your_profile_pDEq5">"Tu Perfil"</string>
   <string name="_com_recuperalo_mobile_ok_1pfaRT">"Ok"</string>
+  <string name="_com_recuperalo_mobile_object_view_2nk8SN">"Vista del Objeto"</string>
   <string name="_com_recuperalo_mobile_submit_ZJrbu">"Listo"</string>
   <string name="_com_recuperalo_mobile_upload_photo_2aFWrP">"Subir Photo"</string>
   <string name="_com_recuperalo_mobile_upload_image_2ae4pz">"Subir Imagen"</string>
