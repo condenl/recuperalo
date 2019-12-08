@@ -35,6 +35,8 @@ export class ProfileComponent implements OnInit {
 
   private profileForm: FormGroup;
 
+  private published: number;
+
   profile_validation_messages = {
     username: [
       { type: "required", message: localize("com.recuperalo.mobile.required-field") },
@@ -58,9 +60,10 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.pageRoute.activatedRoute.pipe(
       switchMap(activatedRoute => activatedRoute.data)
-    ).forEach((data: { appUser: AppUser; defaultProfilePhotoUrl: string; }) => {
+    ).forEach((data: { appUser: AppUser; defaultProfilePhotoUrl: string; lostObjects: Array<any>}) => {
       this.appUser = data.appUser;
       this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : data.defaultProfilePhotoUrl;
+      this.published = data.lostObjects ? data.lostObjects.length : 0;
       this.profileForm = this.formBuilder.group({
         username: [this.appUser.username, Validators.required, uniqueUsernameValidator(this.appUserService, this.appUser.id)],
         name: this.appUser.name,

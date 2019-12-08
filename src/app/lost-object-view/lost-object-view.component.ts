@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LostObject } from '~/app/shared/lost-object';
-import { MapView } from 'nativescript-google-maps-sdk';
+import { MapView, Marker, Position } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { Image } from '../shared/image';
@@ -72,6 +72,19 @@ export class LostObjectViewComponent implements OnInit {
 
     public onMapReady = (event) => {
         this.mapView = event.object;
+        this.mapView.settings.zoomControlsEnabled = true;
+        this.mapView.settings.zoomGesturesEnabled = true;
+        this.mapView.latitude = this.lostObject.location[0];
+        this.mapView.longitude = this.lostObject.location[1];
+        this.mapView.zoom = 10;
+        this.addMapMarker(this.lostObject.location[0], this.lostObject.location[1]);
+    };
+
+    private addMapMarker(lat, long) {
+        this.mapView.removeAllMarkers();
+        var marker = new Marker();
+        marker.position = Position.positionFromLatLng(lat, long);
+        this.mapView.addMarker(marker);
     }
 
     public isCurrentUserOwner(): boolean {

@@ -34,7 +34,7 @@ export class UsernameSetGuard implements CanActivate {
                     }).then(() => {
                         this.loaderUtils.show();
                         this.homeActivityIndicatorService.notBusy();
-                        this.routeUtils.routeTo("/profile");
+                        this.routeUtils.routeTo("/profile", "slideTop");
                     });
                     return false;
                 }

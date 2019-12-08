@@ -3,6 +3,7 @@
   <string name="_com_recuperalo_mobile_reorder_photos_Z1JOf83">"Reordenar Fotos"</string>
   <string name="_com_recuperalo_mobile_remove_photo_Z1Ue0B4">"Remover Foto"</string>
   <string name="_com_recuperalo_mobile_no_photos_WeT0D">"No hay fotos"</string>
+  <string name="_com_recuperalo_mobile_missing_Z1Y9tRR">"Complete"</string>
   <string name="_com_recuperalo_mobile_main_found_1wYmir">"Encontrado"</string>
   <string name="_com_recuperalo_mobile_main_chats_1wL9yW">"Chats"</string>
   <string name="_com_recuperalo_mobile_main_home_1w5IMX">"Home"</string>
@@ -24,6 +25,7 @@
   <string name="_com_recuperalo_mobile_profile_checking_username_1liyE7">"Comprobando unicidad..."</string>
   <string name="_com_recuperalo_mobile_profile_username_1z7osb">"Usuario"</string>
   <string name="_com_recuperalo_mobile_profile_your_profile_pDEq5">"Tu Perfil"</string>
+  <string name="_com_recuperalo_mobile_ok_1pfaRT">"Ok"</string>
   <string name="_com_recuperalo_mobile_submit_ZJrbu">"Listo"</string>
   <string name="_com_recuperalo_mobile_upload_photo_2aFWrP">"Subir Photo"</string>
   <string name="_com_recuperalo_mobile_upload_image_2ae4pz">"Subir Imagen"</string>
@@ -46,6 +48,8 @@
   <string name="_com_recuperalo_mobile_required_field_23hoEx">"Campo requerido."</string>
   <string name="_com_recuperalo_mobile_continue_cKoqy">"Continuar"</string>
   <string name="_com_recuperalo_mobile_required_username_Znd9PO">"Deber tener un nombre de usuario"</string>
+  <string name="_com_recuperalo_mobile_required_map_disclaimer_Z273o5P">"Presioná para marcar la ubiaccion donde encontraste el objeto"</string>
+  <string name="_com_recuperalo_mobile_required_map_position_ZzSqLM">"Seleccioná una posición en el mapa"</string>
   <string name="_com_recuperalo_mobile_alert_WMtgC">"Alerta"</string>
   <string name="facebook_app_id">"2042679969160170"</string>
   <string name="_app_name_1k3Sbz">"Recuperalo"</string>

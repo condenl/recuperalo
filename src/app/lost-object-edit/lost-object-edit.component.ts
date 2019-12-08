@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
 import { LostObject } from '~/app/shared/lost-object';
-import { MapView } from 'nativescript-google-maps-sdk';
+import { MapView, Marker, Position } from 'nativescript-google-maps-sdk';
 import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { Image } from '../shared/image';
@@ -46,6 +46,10 @@ export class LostObjectEditComponent implements OnInit {
 
     public updatingSlider: boolean = false;
 
+    private mapLatSelected;
+
+    private mapLongSelected;
+
     constructor(private lostObjectService: LostObjectService, 
         private route: ActivatedRoute, 
         private formBuilder: FormBuilder,
@@ -62,6 +66,8 @@ export class LostObjectEditComponent implements OnInit {
                     noPhotoUrl: string; 
                     lostObject: any }) => {
                 this.lostObject = data.lostObject;
+                this.mapLatSelected = this.lostObject.location[0];
+                this.mapLongSelected = this.lostObject.location[1];
                 this.appUser = data.appUser;
                 this.lostObjectEditForm = this.formBuilder.group({
                     name: [this.lostObject.name, Validators.required],
@@ -125,6 +131,7 @@ export class LostObjectEditComponent implements OnInit {
     public reorderPhotos() {
         if (!this.images || this.images.length == 0 || this.noPhotos) {
             Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+            return;
         }
         this.modalService.show(ImageReorderComponent, this.viewContainerRef, this.images, false);
     }
@@ -136,7 +143,7 @@ export class LostObjectEditComponent implements OnInit {
         lostObject.description = this.description.value;
         lostObject.publishTimestamp = this.lostObject.publishTimestamp;
         lostObject.lastUpdateTimestamp = new Date().getTime();
-        lostObject.location = [this.mapView["latitude"] , this.mapView["longitude"]];
+        lostObject.location = [this.mapLatSelected, this.mapLongSelected];
         lostObject.username = this.appUser.username;
         lostObject.photos = this.images;
         return lostObject;
@@ -144,7 +151,26 @@ export class LostObjectEditComponent implements OnInit {
 
     public onMapReady = (event) => {
         this.mapView = event.object;
+        this.mapView.settings.zoomControlsEnabled = true;
+        this.mapView.settings.zoomGesturesEnabled = true;
+        this.mapView.latitude = this.mapLatSelected;
+        this.mapView.longitude = this.mapLongSelected;
+        this.mapView.zoom = 9;
+        this.addMapMarker(this.mapLatSelected, this.mapLongSelected)
     };
+
+    public onCoordinateLongPress(args) {
+        this.mapLatSelected = args.position.latitude;
+        this.mapLongSelected = args.position.longitude;
+        this.addMapMarker(this.mapLatSelected, this.mapLongSelected);
+    }
+
+    private addMapMarker(lat, long) {
+        this.mapView.removeAllMarkers();
+        var marker = new Marker();
+        marker.position = Position.positionFromLatLng(lat, long);
+        this.mapView.addMarker(marker);
+    }
 
     public saveLostObject(update: boolean) {
         this.lostObjectService.update(this.populateLostObject(), this.lostObject.id)

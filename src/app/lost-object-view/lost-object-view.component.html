@@ -11,8 +11,7 @@
         <TextView [text]="lostObject.description" editable="false"
             borderWidth="1" height="80" width="80%" returnKeyType="send" 
             class="input input-border m-t-15 m-b-15 normal-font-size"></TextView>
-        <MapView width="90%" latitude="{{ lostObject.location[0] }}" 
-            longitude="{{ lostObject.location[1] }}" (mapReady)="onMapReady($event)"></MapView>
+        <MapView width="90%" (mapReady)="onMapReady($event)"></MapView>
     </StackLayout>
     <Button [visibility]="!fromChat && !isCurrentUserOwner() ? 'visible' : 'collapsed'" class="btn btn-primary m-b-10 green-bg" text="{{ 'com.recuperalo.mobile.contact' | L }}" (tap)="contact()"></Button>
     <Label [visibility]="isCurrentUserOwner() ? 'visible' : 'collapsed'" class="m-b-10" text="{{ 'com.recuperalo.mobile.item-owned' | L }}"></Label>

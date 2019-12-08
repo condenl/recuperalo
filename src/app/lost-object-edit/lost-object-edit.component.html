@@ -23,7 +23,8 @@
             borderWidth="1" height="80" width="80%" returnKeyType="send" 
             class="input input-border m-t-15 m-b-15 normal-font-size {{ !description.valid ? 'input-error-outline' : '' }}" 
             formControlName="description"></TextView>
-        <MapView width="90%" latitude="{{ lostObject.location[0] }}" longitude="{{ lostObject.location[1] }}" (mapReady)="onMapReady($event)"></MapView>
+        <MapView width="90%" (mapReady)="onMapReady($event)" (coordinateLongPress)="onCoordinateLongPress($event)"></MapView>
     </StackLayout>
+    <Label text="{{ 'com.recuperalo.mobile.required.map-disclaimer' | L }}"></Label>
     <Button class="btn btn-primary m-b-10 delete-button" text="{{ 'com.recuperalo.mobile.delete' | L }}" (tap)="deleteLostObject()"></Button>
 </FlexboxLayout>

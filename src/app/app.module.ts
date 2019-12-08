@@ -61,7 +61,7 @@ import { ModalSingleImageComponent } from "./modal-single-image/modal-single-ima
     schemas: [
         NO_ERRORS_SCHEMA
     ],
-    entryComponents: [ DatePickerModalComponent, ModalSingleImageComponent ]
+    entryComponents: [ DatePickerModalComponent, ModalSingleImageComponent, ImageReorderComponent ]
 })
 /*
 Pass your application module to the bootstrapModule function located in main.ts to start your app

@@ -3,7 +3,7 @@
         <ng-template tkListItemTemplate let-item="item">
             <GridLayout columns="*, auto" class="m-b-10" paddingTop="16" paddingBottom="16">
                 <StackLayout orientation="vertical" col="0" verticalAlignment="center">
-                    <Image [src]="item.url" height="100" width="60%"></Image>
+                    <Image [src]="item.url" height="110" width="60%"></Image>
                 </StackLayout>
                 <ReorderHandle col="1" verticalAlignment="center">
                     <Label class="fa action-button" text="&#xf0dc;" margin="16"></Label>
@@ -12,7 +12,7 @@
         </ng-template>
     </RadListView>
 
-    <StackLayout orientation="horizontal" horizontalAlignment="center">
-        <Label text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="close()"></Label>
+    <StackLayout class="m-t-5 m-b-5" orientation="horizontal" horizontalAlignment="center">
+        <Label class="modal-done" text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="close()"></Label>
     </StackLayout>
 </StackLayout>

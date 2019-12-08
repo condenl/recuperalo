@@ -85,7 +85,8 @@ const routes: Routes = [
     { path: "profile", component: ProfileComponent, canActivate: [ AuthGuard ], 
         resolve: {
             appUser: AppUserResolver,
-            defaultProfilePhotoUrl: DefaultProfilePhotoResolver
+            defaultProfilePhotoUrl: DefaultProfilePhotoResolver,
+            lostObjects: LostObjectFoundResolver
         }
     },
     { path: "chat/:itemId" , redirectTo: "chat/:itemId/", pathMatch : "full"},

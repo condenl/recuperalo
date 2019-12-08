@@ -61,7 +61,7 @@
         <StackLayout orientation="horizontal" class="w-95 m-5 text-center">
             <StackLayout class="text-center w-50 text-right p-20 border-right title">
                 <Label text="{{ 'com.recuperalo.mobile.profile.published' | L }}" class="font-weight-bold"></Label>
-                <Label text="0"></Label>
+                <Label [text]="published"></Label>
             </StackLayout>
             <StackLayout class="text-center w-50 text-left p-20 title">
                 <Label text="{{ 'com.recuperalo.mobile.profile.points' | L }}" class="font-weight-bold"></Label>
@@ -75,7 +75,7 @@
                 <Label text="{{ 'com.recuperalo.mobile.profile.email' | L }}" class="label"></Label>
                 <Label *ngIf="editMode" text=" *" class="label" color="#E32"></Label>
             </StackLayout>
-            <Label *ngIf="!editMode || appUser.email" text="{{ appUser.email }}" class="input"></Label>
+            <Label *ngIf="!editMode || appUser.email" text="{{ appUser.email }}" class="m-b-5 input"></Label>
             <StackLayout *ngIf="editMode && appUser.email == null">
                 <TextField class="input" keyboardType="email" maxLength="50" formControlName="email"></TextField>
                 <StackLayout *ngIf="email.errors">

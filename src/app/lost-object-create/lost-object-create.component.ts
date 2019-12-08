@@ -16,6 +16,7 @@ import { localize } from "nativescript-localize";
 import { SwipeDirection, SwipeGestureEventData } from 'tns-core-modules/ui/gestures/gestures';
 
 var Toast = require("nativescript-toast");
+var dialogs = require("tns-core-modules/ui/dialogs");
 
 @Component({
     selector: 'ns-lost-object-create',
@@ -43,6 +44,12 @@ export class LostObjectCreateComponent implements OnInit {
 
     public updatingSlider: boolean = false;
 
+    private markerSet: boolean = false;
+
+    private mapLatSelected;
+
+    private mapLongSelected;
+
     constructor(private lostObjectService: LostObjectService, 
         private route: ActivatedRoute, 
         private formBuilder: FormBuilder,
@@ -66,6 +73,7 @@ export class LostObjectCreateComponent implements OnInit {
             name: ['', Validators.required],
             description: ['', Validators.required]
         });
+        this.markerSet = false;
         this.homeActivityIndicatorService.notBusy();
     }
 
@@ -119,32 +127,44 @@ export class LostObjectCreateComponent implements OnInit {
     public reorderPhotos() {
         if (!this.images || this.images.length == 0 || this.noPhotos) {
             Toast.makeText(localize("com.recuperalo.mobile.no-photos")).show();
+            return;
         }
         this.modalService.show(ImageReorderComponent, this.viewContainerRef, this.images, false);
     }
 
+    // initially set with BA coordinates
     public onMapReady = (event) => {
         this.mapView = event.object;
-        this.mapView.settings.compassEnabled = true;
-        this.mapView.settings.indoorLevelPickerEnabled = true;
-        this.mapView.settings.mapToolbarEnabled = true;
-        this.mapView.settings.myLocationButtonEnabled = true;
-        this.mapView.settings.rotateGesturesEnabled = true;
-        this.mapView.settings.scrollGesturesEnabled = true;
-        this.mapView.settings.tiltGesturesEnabled = true;
         this.mapView.settings.zoomControlsEnabled = true;
         this.mapView.settings.zoomGesturesEnabled = true;
-
-        console.log("Setting a marker...");
-        var marker = new Marker();
-        marker.position = Position.positionFromLatLng(-33.86, 151.20);
-        marker.title = "Sydney";
-        marker.snippet = "Australia";
-        marker.userData = {index: 1};
-        this.mapView.addMarker(marker);
+        this.mapView.latitude = -34.62;
+        this.mapView.longitude = -58.51;
+        this.mapView.zoom = 9;
     };
 
+    public onCoordinateLongPress(args) {
+        this.markerSet = true;
+        this.mapLatSelected = args.position.latitude;
+        this.mapLongSelected = args.position.longitude;
+        this.addMapMarker(this.mapLatSelected, this.mapLongSelected);
+    }
+
+    private addMapMarker(lat, long) {
+        this.mapView.removeAllMarkers();
+        var marker = new Marker();
+        marker.position = Position.positionFromLatLng(lat, long);
+        this.mapView.addMarker(marker);
+    }
+
     public createLostObject() {
+        if (!this.markerSet) {
+            dialogs.alert({
+                title: localize("com.recuperalo.mobile.missing"),
+                message: localize("com.recuperalo.mobile.required.map-position"),
+                okButtonText: localize("com.recuperalo.mobile.ok")
+            });
+            return;
+        }
         this.lostObjectService.create(this.populateLostObject())
             .then(() => this.routeUtils.routeTo("/home/found"));
     }
@@ -157,7 +177,7 @@ export class LostObjectCreateComponent implements OnInit {
         lostObject.description = this.description.value;
         lostObject.publishTimestamp = currentDateTime;
         lostObject.lastUpdateTimestamp = currentDateTime;
-        lostObject.location = [this.mapView["latitude"] , this.mapView["longitude"]];
+        lostObject.location = [this.mapLatSelected , this.mapLongSelected];
         lostObject.username = this.appUser.username;
         lostObject.photos = this.images;
         return lostObject;

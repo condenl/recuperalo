@@ -12,12 +12,11 @@ export class AdService {
 
     constructor() { }
 
-    showBanner(view) {
+    showBanner() {
         firebase.admob.showBanner({
-            view: view,
             size: firebase.admob.AD_SIZE.SMART_BANNER,
             margins: {
-                bottom: 50
+                bottom: 0
             },
             testing: true,
             androidBannerId: "ca-app-pub-2414445891745010/7307188387"

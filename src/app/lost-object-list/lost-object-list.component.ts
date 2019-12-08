@@ -47,7 +47,8 @@ export class LostObjectListComponent implements OnInit {
                 }
             );
         this.homeActivityIndicatorService.notBusy();
-        this.adService.showBanner(this.contentView);
+        setTimeout(() => this.adService.showBanner(), 2000);
+        
     }
 
     public toDate(ts: number): Date {
