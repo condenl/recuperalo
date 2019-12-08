@@ -54,8 +54,8 @@ export class ChatListComponent implements OnInit {
     });
   }
 
-  openChat(lostObjectId: string): void {
-    this.routeUtils.routeTo("/chat/" + lostObjectId);
+  openChat(lostObjectId: string, chatId: string): void {
+    this.routeUtils.routeTo("/chat/" + lostObjectId + "/" + chatId);
   }
 
 }

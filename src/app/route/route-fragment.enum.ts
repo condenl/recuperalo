@@ -1,3 +1,4 @@
 export enum RouteFragment {
-    LOGOUT
+    LOGOUT,
+    FROM_CHAT
 }

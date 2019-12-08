@@ -1,7 +1,7 @@
 <GridLayout columns="*" rows="*" class="gray-bg">
     <ListView row="0" col="0" height="100%" padding="5" [items]="chats$ | async">
         <ng-template let-item="item">
-            <GridLayout columns="*" rows="auto" class="msg" (tap)="openChat(item.lostObject.id)">
+            <GridLayout columns="*" rows="auto" class="msg" (tap)="openChat(item.lostObject.id, item.id)">
                 <StackLayout class="them" orientation="horizontal" horizontalAlignment="left">
                     <Image class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" 
                     [src]="item.imageUrl" col="1"></Image>

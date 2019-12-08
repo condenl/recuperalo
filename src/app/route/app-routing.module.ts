@@ -20,7 +20,6 @@ import { ChatComponent } from "../chat/chat.component";
 import { ChatListComponent } from "../chat-list/chat-list.component";
 import { ChatResolver } from "./resolver/chat-resolver.service";
 import { DefaultProfilePhotoResolver } from "./resolver/default-profile-photo-resolver.service";
-import { ImageReorderComponent } from "../image-reorder/image-reorder.component";
 
 const routes: Routes = [
     { path: "", redirectTo: "/login", pathMatch: "full" },
@@ -75,7 +74,8 @@ const routes: Routes = [
             noPhotoUrl: NoPhotoResolver
         }
     },
-    { path: "lost-object-view/:itemId", component: LostObjectViewComponent, canActivate: [ AuthGuard ],
+    { path: "lost-object-view/:itemId" , redirectTo: "lost-object-view/:itemId/", pathMatch : "full"},
+    { path: "lost-object-view/:itemId/:chatId", component: LostObjectViewComponent, canActivate: [ AuthGuard ],
         resolve: { 
             appUser: AppUserResolver,
             lostObject: LostObjectResolver,
@@ -88,15 +88,16 @@ const routes: Routes = [
             defaultProfilePhotoUrl: DefaultProfilePhotoResolver
         }
     },
-    { path: "chat/:itemId", component: ChatComponent, canActivate: [ AuthGuard ],
+    { path: "chat/:itemId" , redirectTo: "chat/:itemId/", pathMatch : "full"},
+    { path: "chat/:itemId/:chatId", component: ChatComponent, canActivate: [ AuthGuard ],
         resolve: {
             appUser: AppUserResolver,
             defaultProfilePhotoUrl: DefaultProfilePhotoResolver,
+            noItemPhotoUrl: NoPhotoResolver,
             chat: ChatResolver,
             lostObject: LostObjectResolver
         }
-    },
-    { path: "reorder-photos", component: ImageReorderComponent, canActivate: [ AuthGuard ] }
+    }
 ];
 
 @NgModule({

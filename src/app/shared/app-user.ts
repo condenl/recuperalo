@@ -18,4 +18,6 @@ export interface AppUser {
 
     emailVerified: true;
 
+    pushToken: string;
+    
 }

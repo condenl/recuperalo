@@ -26,11 +26,11 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        let _fragment: string;
-        this.route.fragment.subscribe(fragment => _fragment = fragment);
-        if (_fragment == RouteFragment[RouteFragment.LOGOUT]) {
-            Toast.makeText(localize("com.recuperalo.mobile.login.successful-logout"), "long").show();
-        }
+        this.route.fragment.subscribe(fragment => {
+            if (fragment == RouteFragment[RouteFragment.LOGOUT]) {
+                Toast.makeText(localize("com.recuperalo.mobile.login.successful-logout"), "long").show();
+            }
+        });
     }
 
     login(loginType: LoginType) {

@@ -3,7 +3,7 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
 import { NativeScriptLocalizeModule } from "nativescript-localize/angular";
-
+import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
 import { ModalDialogService } from "nativescript-angular/modal-dialog";
 import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 
@@ -36,7 +36,8 @@ import { ModalSingleImageComponent } from "./modal-single-image/modal-single-ima
         NativeScriptFormsModule,
         ReactiveFormsModule,
         NativeScriptLocalizeModule,
-        NativeScriptUIListViewModule
+        NativeScriptUIListViewModule,
+        NativeScriptHttpClientModule
     ],
     declarations: [
         AppComponent,

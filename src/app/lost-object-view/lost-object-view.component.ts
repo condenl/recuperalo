@@ -6,6 +6,7 @@ import { RouteUtilsService } from '~/app/route/route-utils.service';
 import { AppUser } from '~/app/shared/app-user';
 import { Image } from '../shared/image';
 import { localize } from "nativescript-localize";
+import { RouteFragment } from '../route/route-fragment.enum';
 
 var Toast = require("nativescript-toast");
 
@@ -27,10 +28,22 @@ export class LostObjectViewComponent implements OnInit {
 
     private appUser: AppUser;
 
-    constructor(private route: ActivatedRoute, 
-        private routeUtils: RouteUtilsService) { }
+    private backUrl: string = "home";
+
+    private fromChat: boolean = false;
+
+    constructor(private route: ActivatedRoute, private routeUtils: RouteUtilsService) { }
 
     ngOnInit(): void {
+        console.log("LostObjectViewComponent chatId", this.route.snapshot.params.chatId);
+        this.route.fragment.subscribe(fragment => {
+            if (!this.fromChat && fragment == RouteFragment[RouteFragment.FROM_CHAT]) {
+                this.fromChat = true;
+                this.backUrl = "/chat/" + this.route.snapshot.params.itemId  
+                   + (this.route.snapshot.params.chatId ? "/" + this.route.snapshot.params.chatId : '');
+            }
+        });
+        
         this.route
             .data
             .subscribe((data: { appUser: AppUser; lostObject: LostObject; noPhotoUrl: string; }) => {
