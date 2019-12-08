@@ -29,13 +29,15 @@ export class ProfileComponent implements OnInit {
 
   private appUser: AppUser;
 
-  private imageLoading: boolean = true;
+  private imageLoading: boolean;
 
   private editMode: boolean = false;
 
   private profileForm: FormGroup;
 
   private published: number;
+
+  private defaultProfilePhotoUrl: string;
 
   profile_validation_messages = {
     username: [
@@ -63,11 +65,12 @@ export class ProfileComponent implements OnInit {
     ).forEach((data: { appUser: AppUser; defaultProfilePhotoUrl: string; lostObjects: Array<any>}) => {
       this.appUser = data.appUser;
       this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : data.defaultProfilePhotoUrl;
+      this.defaultProfilePhotoUrl = data.defaultProfilePhotoUrl;
       this.published = data.lostObjects ? data.lostObjects.length : 0;
       this.profileForm = this.formBuilder.group({
         username: [this.appUser.username, Validators.required, uniqueUsernameValidator(this.appUserService, this.appUser.id)],
         name: this.appUser.name,
-        birthday: new Date(this.appUser.birthday),
+        birthday: this.appUser.birthday ? new Date(this.appUser.birthday) : null,
         email: [this.appUser.email, [Validators.required, Validators.email]],
         phone: [this.appUser.phone, Validators.required]
       });
@@ -77,10 +80,20 @@ export class ProfileComponent implements OnInit {
 
   public choosePicture(): void {
     this.imageService.openImagePicker().then(selection => 
-      selection.forEach(selected => 
+      selection.forEach(selected => {
+        this.imageLoading = true;
         this.appUserService.uploadProfilePhoto(selected, this.appUser.id)
-          .then(remoteUrl => this.profilePhotoUrl = remoteUrl)
-      )
+          .then(remoteUrl => {
+            this.profilePhotoUrl = remoteUrl;
+            if (this.editMode) {
+              this.imageLoading = false;
+            } else {
+              this.appUser.profilePhotoUrl = this.profilePhotoUrl;
+              this.appUserService.update(this.appUser, this.appUser.id)
+                .then(() => this.imageLoading = false);
+            }
+          })
+      })
     );
   }
 
@@ -103,7 +116,7 @@ export class ProfileComponent implements OnInit {
   }
 
   public cancelEditing(): void {
-    if (this.profileForm.dirty) {
+    if (this.profileForm.dirty || (this.defaultProfilePhotoUrl != this.profilePhotoUrl && this.appUser.profilePhotoUrl != this.profilePhotoUrl)) {
       dialogs.confirm({
         title: localize("com.recuperalo.mobile.alert"),
         message: localize("com.recuperalo.mobile.unsaved-changes"),
@@ -115,7 +128,8 @@ export class ProfileComponent implements OnInit {
           this.appUser.birthday = null;
           this.profileForm.reset(this.appUser);
           this.appUser.birthday = aux;
-          this.birthday = new Date(this.appUser.birthday);
+          this.birthday = new Date(this.appUser.birthday ? this.appUser.birthday : null);
+          this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : this.defaultProfilePhotoUrl;
           this.editMode = false;
         }
       });
@@ -138,15 +152,6 @@ export class ProfileComponent implements OnInit {
     }
     appUser.profilePhotoUrl = this.profilePhotoUrl;
     return appUser;
-  }
-
-  public onProfilePhotoLoaded(args: any): void {
-    if (args.object.isLoading) {
-      this.imageLoading = true;
-    }
-    if (args.object.isLoaded) {
-      this.imageLoading = false;
-    }
   }
 
   public selectDateView() {

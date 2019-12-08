@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewContainerRef } from '@angular/core';
 import { LostObjectService } from '~/app/shared/lost-object.service';
-import { LoaderUtilsService } from '~/app/shared/loader-utils.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HomeActivityIndicatorService } from '~/app/shared/home-activity-indicator.service';
 import { ActivatedRoute } from '@angular/router';
@@ -106,8 +105,8 @@ export class LostObjectEditComponent implements OnInit {
         }
         for (let i = 0; i < this.images.length; i++) {
             if (this.images[i].uuid == this.currentPhotoUid) {
+                this.swipeFnHolder.fn.apply(this.swipeFnHolder.applyOn, [{ direction: SwipeDirection.right } as SwipeGestureEventData]);
                 this.images.splice(i, 1);
-                this.swipeFnHolder.fn.apply(this.swipeFnHolder.applyOn, [{ direction: SwipeDirection.left } as SwipeGestureEventData]);
                 break;
             }
         }

@@ -18,7 +18,9 @@
             formControlName="description"></TextView>
         <MapView width="90%" (mapReady)="onMapReady($event)" (coordinateLongPress)="onCoordinateLongPress($event)"></MapView>
     </StackLayout>
-    <Label text="{{ 'com.recuperalo.mobile.required.map-disclaimer' | L }}"></Label>
-    <Button class="btn btn-primary m-b-10" text="{{ 'com.recuperalo.mobile.create' | L }}" 
-        [disabled]="!lostObjectCreateForm.valid" (tap)="createLostObject()"></Button>
+    <StackLayout height="25%">
+        <Label class="light-gray-color" text="{{ 'com.recuperalo.mobile.required.map-disclaimer' | L }}"></Label>
+        <Button class="btn btn-primary m-b-10" text="{{ 'com.recuperalo.mobile.create' | L }}" 
+            [disabled]="!lostObjectCreateForm.valid" (tap)="createLostObject()"></Button>
+    </StackLayout>
 </FlexboxLayout>

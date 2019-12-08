@@ -1,8 +1,10 @@
 <ActionBar class="action-bar" title="{{ 'com.recuperalo.mobile.lost-object.edit' | L }}">
-    <StackLayout orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
-        <Label text="{{ 'com.recuperalo.mobile.cancel' | L }}" class="m-r-10" (tap)="cancelEditing()"></Label>
-        <Label text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="saveLostObject()"></Label>
-    </StackLayout>
+    <ActionItem android.position="actionBar" ios.position="right">
+        <StackLayout orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
+            <Label text="{{ 'com.recuperalo.mobile.cancel' | L }}" class="m-r-10" (tap)="cancelEditing()"></Label>
+            <Label text="{{ 'com.recuperalo.mobile.done' | L }}" (tap)="saveLostObject()"></Label>
+        </StackLayout>
+    </ActionItem>
 </ActionBar>
 
 <FlexboxLayout [formGroup]="lostObjectEditForm" class="page gray-bg color-white p-t-10">
@@ -25,6 +27,8 @@
             formControlName="description"></TextView>
         <MapView width="90%" (mapReady)="onMapReady($event)" (coordinateLongPress)="onCoordinateLongPress($event)"></MapView>
     </StackLayout>
-    <Label text="{{ 'com.recuperalo.mobile.required.map-disclaimer' | L }}"></Label>
-    <Button class="btn btn-primary m-b-10 delete-button" text="{{ 'com.recuperalo.mobile.delete' | L }}" (tap)="deleteLostObject()"></Button>
+    <StackLayout height="20%">
+        <Label class="light-gray-color" text="{{ 'com.recuperalo.mobile.required.map-disclaimer' | L }}"></Label>
+        <Button class="btn btn-primary m-b-10 delete-button" text="{{ 'com.recuperalo.mobile.delete' | L }}" (tap)="deleteLostObject()"></Button>
+    </StackLayout>
 </FlexboxLayout>

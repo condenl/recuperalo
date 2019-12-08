@@ -1,8 +1,8 @@
 <ActionBar class="action-bar" [title]="receiver.username">
     <NavigationButton text="{{ 'com.recuperalo.mobile.go-back' | L }}" android.systemIcon="ic_menu_back" (tap)="routeUtils.routeTo('home/chats', 'slideBottom')"></NavigationButton>
-    <StackLayout orientation="horizontal" ios:horizontalAlignment="right" android:horizontalAlignment="right">
+    <ActionItem android.position="actionBar" ios.position="right">
         <Label text="&#xf06e;" class="fa action-button" (tap)="view(lostObject.id)"></Label>
-    </StackLayout>
+    </ActionItem>
 </ActionBar>
 
 <StackLayout>

@@ -194,3 +194,7 @@ SearchBar {
     vertical-align: center;
     color: #30BCFF;
 }
+
+.light-gray-color {
+    color: lightgray;
+}

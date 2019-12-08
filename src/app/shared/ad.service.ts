@@ -21,11 +21,11 @@ export class AdService {
             testing: true,
             androidBannerId: "ca-app-pub-2414445891745010/7307188387"
         }).then(
-            function () {
-                console.log("AdMob banner created");
+            function (data) {
+                console.log("AdMob banner created", data);
             }, 
             function (err) {
-                console.log(err);
+                console.log("AdMob banner error", err);
             }
         );
     }
