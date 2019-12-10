@@ -1,12 +1,15 @@
 <GridLayout columns="*" rows="*" height="100%" class="gray-bg">
     <ListView row="0" col="0" padding="5" [items]="chats$ | async">
         <ng-template let-item="item">
-            <GridLayout columns="*" rows="auto" class="msg" (tap)="openChat(item.lostObject.id, item.id)">
-                <StackLayout class="them" orientation="horizontal" horizontalAlignment="left">
+            <GridLayout columns="*, auto" width="100%" rows="auto" class="msg">
+                <StackLayout col="0" width="85%" orientation="horizontal" horizontalAlignment="left" (tap)="openChat(item.lostObject.id, item.id)">
                     <Image class="authorimg" stretch="aspectFill" height="50" width="50" verticalAlignment="center" 
-                    [src]="item.imageUrl" col="1"></Image>
+                    [src]="item.imageUrl"></Image>
                     <Label [text]="item.lostObject.name" class="item-name" verticalAlignment="center"></Label>
                     <Label [text]=" ' ' + chatDescription(item)" class="description-text" verticalAlignment="center"></Label>
+                </StackLayout>
+                <StackLayout *ngIf="item.lostObject.createdById == appUser.id" col="1" orientation="horizontal" horizontalAlignment="right">
+                    <Label text="&#xf05a;" class="fa action-button color-white" (tap)="infoToast()"></Label>
                 </StackLayout>
             </GridLayout>
         </ng-template>

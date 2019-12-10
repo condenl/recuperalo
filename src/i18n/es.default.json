@@ -52,5 +52,6 @@
     "com.recuperalo.mobile.missing": "Complete",
     "com.recuperalo.mobile.no-photos": "No hay fotos",
     "com.recuperalo.mobile.remove-photo": "Remover Foto",
-    "com.recuperalo.mobile.reorder-photos": "Reordenar Fotos"
+    "com.recuperalo.mobile.reorder-photos": "Reordenar Fotos",
+    "com.recuperalo.mobile.tooltip.published": "Vos lo publicaste"
 }

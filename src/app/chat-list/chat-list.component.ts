@@ -6,6 +6,9 @@ import { HomeActivityIndicatorService } from '../shared/home-activity-indicator.
 import { Observable, NextObserver } from "rxjs";
 import { ChatService } from '../shared/chat.service';
 import { Chat } from '../shared/chat';
+import { localize } from "nativescript-localize";
+
+var Toast = require("nativescript-toast");
 
 @Component({
   selector: 'ns-chat-list',
@@ -55,6 +58,10 @@ export class ChatListComponent implements OnInit {
 
   openChat(lostObjectId: string, chatId: string): void {
     this.routeUtils.routeTo("/chat/" + lostObjectId + "/" + chatId);
+  }
+
+  infoToast() {
+    Toast.makeText(localize("com.recuperalo.mobile.tooltip.published")).show();
   }
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="_com_recuperalo_mobile_tooltip_published_1EDtGd">"Published by you"</string>
   <string name="_com_recuperalo_mobile_reorder_photos_Z1JOf83">"Reorder Photos"</string>
   <string name="_com_recuperalo_mobile_remove_photo_Z1Ue0B4">"Remove Photo"</string>
   <string name="_com_recuperalo_mobile_no_photos_WeT0D">"No photos yet"</string>

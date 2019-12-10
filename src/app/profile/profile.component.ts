@@ -128,7 +128,7 @@ export class ProfileComponent implements OnInit {
           this.appUser.birthday = null;
           this.profileForm.reset(this.appUser);
           this.appUser.birthday = aux;
-          this.birthday = new Date(this.appUser.birthday ? this.appUser.birthday : null);
+          this.birthday = this.appUser.birthday ? new Date(this.appUser.birthday) : null;
           this.profilePhotoUrl = this.appUser.profilePhotoUrl ? this.appUser.profilePhotoUrl : this.defaultProfilePhotoUrl;
           this.editMode = false;
         }
